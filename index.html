@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CFO360 - Aura Partners | Claridad Financiera sin Contratar un CFO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-deep: #1a1a4e;
+            --primary-blue: #2d3e8f;
+            --accent-purple: #7b68ee;
+            --accent-gold: #d4af37;
+            --accent-green: #00c853;
+            --neutral-light: #f8f9fc;
+            --neutral-dark: #2a2a3e;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Sticky Bar */
+        .sticky-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%);
+            padding: 12px 0;
+            z-index: 2000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .sticky-bar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .sticky-bar-text {
+            color: white;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .sticky-bar-text strong {
+            color: var(--accent-gold);
+            font-weight: 700;
+        }
+
+        .sticky-cta {
+            background: var(--accent-green);
+            color: white;
+            padding: 12px 32px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sticky-cta:hover {
+            background: #00e676;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 200, 83, 0.3);
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary-deep) 0%, var(--primary-blue) 100%);
+            color: white;
+            padding: 20px 0;
+            margin-top: 60px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 0.9;
+        }
+
+        .logo-main {
+            font-size: 40px;
+            letter-spacing: 8px;
+        }
+
+        .logo-sub {
+            color: var(--accent-gold);
+            font-size: 20px;
+            letter-spacing: 5px;
+            margin-top: 4px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-deep) 0%, var(--primary-blue) 50%, var(--accent-purple) 100%);
+            color: white;
+            padding: 120px 0 140px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(123, 104, 238, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 58px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+        }
+
+        .hero-highlight {
+            color: var(--accent-gold);
+            display: block;
+        }
+
+        .hero-subtitle {
+            font-size: 24px;
+            font-weight: 300;
+            margin-bottom: 40px;
+            opacity: 0.95;
+            line-height: 1.5;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            background: var(--accent-green);
+            color: white;
+            padding: 20px 52px;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(0, 200, 83, 0.3);
+            animation: pulse 2s infinite;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0, 200, 83, 0.4);
+            background: #00e676;
+        }
+
+        /* Niche Description Section */
+        .niche-section {
+            padding: 100px 0;
+            background: white;
+        }
+
+        /* Niche Description Section */
+        .niche-section {
+            padding: 100px 0;
+            background: white;
+        }
+
+        /* About Mary Section */
+        .about-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #f8f9fc 0%, #ffffff 100%);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 80px;
+            align-items: start;
+        }
+
+        .about-image {
+            position: relative;
+        }
+
+        .mary-photo {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        .credentials-badge {
+            margin-top: 24px;
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        .credential-item {
+            padding: 12px 0;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--primary-deep);
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .credential-item:last-child {
+            border-bottom: none;
+        }
+
+        .credential-item::before {
+            content: '✓';
+            color: var(--accent-gold);
+            margin-right: 12px;
+            font-size: 18px;
+        }
+
+        .about-content {
+            padding-top: 0;
+        }
+
+        .about-subtitle {
+            font-size: 20px;
+            color: var(--accent-purple);
+            font-weight: 600;
+            margin-bottom: 32px;
+        }
+
+        .about-text p {
+            font-size: 17px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .about-credentials {
+            list-style: none;
+            padding: 0;
+            margin: 24px 0;
+        }
+
+        .about-credentials li {
+            padding: 14px 0;
+            padding-left: 32px;
+            position: relative;
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--text-primary);
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .about-credentials li:last-child {
+            border-bottom: none;
+        }
+
+        .about-credentials li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent-gold);
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-eyebrow {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-purple);
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 46px;
+            font-weight: 700;
+            color: var(--primary-deep);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .section-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .niche-description {
+            max-width: 900px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #f8f9fc 0%, #ffffff 100%);
+            padding: 60px;
+            border-radius: 20px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+            border-left: 6px solid var(--accent-gold);
+        }
+
+        .niche-description h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            color: var(--primary-deep);
+            margin-bottom: 24px;
+        }
+
+        .niche-description p {
+            font-size: 17px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .niche-description ul {
+            list-style: none;
+            margin: 30px 0;
+        }
+
+        .niche-description li {
+            padding: 16px 0;
+            padding-left: 40px;
+            position: relative;
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--text-primary);
+        }
+
+        .niche-description li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-gold);
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        /* Problem Section - Expanded */
+        .problem-section {
+            padding: 100px 0;
+            background: var(--neutral-light);
+            position: relative;
+        }
+
+        .problems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            margin-top: 60px;
+        }
+
+        .problem-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            border-top: 4px solid var(--accent-purple);
+        }
+
+        .problem-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        }
+
+        .problem-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .problem-card h3 {
+            font-size: 22px;
+            color: var(--primary-deep);
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .problem-card p {
+            color: var(--text-secondary);
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        /* Solution Section */
+        .solution-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--primary-deep) 0%, var(--primary-blue) 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .solution-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .solution-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .solution-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            margin-top: 60px;
+        }
+
+        .solution-visual {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 48px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .solution-visual h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            margin-bottom: 32px;
+            font-weight: 700;
+        }
+
+        .solution-list {
+            list-style: none;
+        }
+
+        .solution-item {
+            display: flex;
+            align-items: start;
+            margin-bottom: 28px;
+            padding: 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .solution-item:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateX(10px);
+        }
+
+        .solution-check {
+            color: var(--accent-gold);
+            font-size: 28px;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .solution-item-content h4 {
+            font-size: 19px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .solution-item-content p {
+            font-size: 15px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* Method Section */
+        .method-section {
+            padding: 100px 0;
+            background: white;
+        }
+
+        .method-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-purple), var(--primary-blue));
+            color: white;
+            padding: 14px 36px;
+            border-radius: 50px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            font-size: 14px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .process-timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 60px auto 0;
+        }
+
+        .process-step {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 50px;
+            position: relative;
+            padding-left: 100px;
+        }
+
+        .step-number {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--primary-blue));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+            box-shadow: 0 6px 24px rgba(123, 104, 238, 0.3);
+        }
+
+        .step-content h3 {
+            font-size: 24px;
+            color: var(--primary-deep);
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .step-content p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        /* Deliverables Section */
+        .deliverables-section {
+            padding: 100px 0;
+            background: var(--neutral-light);
+        }
+
+        .deliverables-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            margin-top: 60px;
+        }
+
+        .deliverable-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            border-top: 4px solid var(--accent-gold);
+        }
+
+        .deliverable-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        }
+
+        .deliverable-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .deliverable-card h4 {
+            font-size: 20px;
+            color: var(--primary-deep);
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .deliverable-card p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* Testimonials Section */
+        .testimonials-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #0a0a2e 0%, #1a1a4e 100%);
+            color: white;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 48px;
+            border-radius: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-5px);
+        }
+
+        .testimonial-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 24px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-gold));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .testimonial-name {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .testimonial-role {
+            font-size: 15px;
+            color: var(--accent-gold);
+            margin-bottom: 24px;
+            opacity: 0.9;
+        }
+
+        .testimonial-stars {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .testimonial-text {
+            font-size: 16px;
+            line-height: 1.8;
+            font-style: italic;
+            opacity: 0.95;
+        }
+
+        /* Guarantee Section */
+        .guarantee-section {
+            padding: 100px 0;
+            background: white;
+            text-align: center;
+        }
+
+        .guarantee-box {
+            max-width: 900px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, var(--primary-deep) 0%, var(--primary-blue) 100%);
+            color: white;
+            border-radius: 32px;
+            padding: 80px 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .guarantee-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
+        }
+
+        .guarantee-badge {
+            position: relative;
+            z-index: 1;
+            font-size: 80px;
+            margin-bottom: 32px;
+        }
+
+        .guarantee-box h3 {
+            position: relative;
+            z-index: 1;
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            margin-bottom: 24px;
+            font-weight: 700;
+        }
+
+        .guarantee-box p {
+            position: relative;
+            z-index: 1;
+            font-size: 19px;
+            line-height: 1.9;
+            opacity: 0.95;
+            margin-bottom: 16px;
+        }
+
+        .guarantee-highlight {
+            background: rgba(212, 175, 55, 0.2);
+            padding: 32px;
+            border-radius: 16px;
+            margin-top: 32px;
+            border: 2px solid rgba(212, 175, 55, 0.4);
+        }
+
+        /* Pricing Section */
+        .pricing-section {
+            padding: 100px 0;
+            background: var(--neutral-light);
+        }
+
+        .pricing-card {
+            max-width: 700px;
+            margin: 60px auto 0;
+            background: white;
+            border-radius: 32px;
+            padding: 60px;
+            box-shadow: 0 12px 50px rgba(0,0,0,0.12);
+            border: 3px solid var(--accent-gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-gold));
+        }
+
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .pricing-amount {
+            font-family: 'Playfair Display', serif;
+            font-size: 64px;
+            font-weight: 700;
+            color: var(--primary-deep);
+            margin-bottom: 12px;
+        }
+
+        .pricing-currency {
+            font-size: 36px;
+        }
+
+        .pricing-period {
+            font-size: 20px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .pricing-features {
+            list-style: none;
+            padding: 0;
+            margin: 32px 0;
+        }
+
+        .pricing-features li {
+            padding: 16px 0;
+            border-bottom: 1px solid #e0e0e0;
+            color: var(--text-primary);
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .pricing-features li::before {
+            content: '✓';
+            color: var(--accent-gold);
+            font-weight: 700;
+            font-size: 20px;
+            margin-right: 16px;
+        }
+
+        .pricing-note {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-top: 24px;
+            font-style: italic;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 100px 0;
+            background: white;
+        }
+
+        .faq-container {
+            max-width: 900px;
+            margin: 60px auto 0;
+        }
+
+        .faq-category {
+            margin-bottom: 60px;
+        }
+
+        .faq-category-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-deep);
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .faq-item {
+            background: var(--neutral-light);
+            border-radius: 16px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question {
+            padding: 28px 32px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--primary-deep);
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: #e8eaf6;
+        }
+
+        .faq-icon {
+            font-size: 20px;
+            color: var(--accent-purple);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+        }
+
+        .faq-answer-content {
+            padding: 0 32px 28px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 120px 0;
+            background: linear-gradient(135deg, var(--primary-deep) 0%, var(--primary-blue) 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -10%;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .cta-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            margin-bottom: 24px;
+            font-weight: 700;
+        }
+
+        .cta-content p {
+            font-size: 22px;
+            margin-bottom: 50px;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 28px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-submit {
+            width: 100%;
+            padding: 22px;
+            background: var(--accent-green);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 20px;
+        }
+
+        .form-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 200, 83, 0.4);
+            background: #00e676;
+        }
+
+        .form-note {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 20px;
+            opacity: 0.85;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--neutral-dark);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .footer-content p {
+            margin-bottom: 12px;
+            opacity: 0.8;
+            font-size: 15px;
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            margin-bottom: 20px;
+            letter-spacing: 3px;
+        }
+
+        .footer-logo span {
+            color: var(--accent-gold);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .sticky-bar-content {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .sticky-bar-text {
+                font-size: 13px;
+                text-align: center;
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .hero h1 {
+                font-size: 38px;
+            }
+
+            .hero-subtitle {
+                font-size: 18px;
+            }
+
+            .section-title {
+                font-size: 36px;
+            }
+
+            .solution-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .pricing-amount {
+                font-size: 48px;
+            }
+
+            .form-container {
+                padding: 30px 24px;
+            }
+
+            .process-step {
+                padding-left: 80px;
+            }
+
+            .step-number {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+
+            .niche-description {
+                padding: 40px 30px;
+            }
+
+            .guarantee-box {
+                padding: 60px 30px;
+            }
+
+            .pricing-card {
+                padding: 40px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sticky Bar -->
+    <div class="sticky-bar">
+        <div class="container">
+            <div class="sticky-bar-content">
+                <div class="sticky-bar-text">
+                    <strong>CFO360</strong> · Toma el Control de tus Finanzas sin Contratar un CFO
+                </div>
+                <a href="#agendar" class="sticky-cta">Agenda tu llamada →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">
+                    <span class="logo-main">AURA</span>
+                    <span class="logo-sub">PARTNERS</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>
+                    Toma Decisiones Financieras con <span class="hero-highlight">Claridad y Confianza</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Sin contratar un CFO, sin invertir en sistemas caros que nadie usa. Con estrategia personalizada, seguimiento mensual y soporte directo.
+                </p>
+                <a href="#agendar" class="hero-cta">Agenda tu Llamada Estratégica</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Niche Description Section -->
+    <section class="niche-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-eyebrow">Para Quién Es CFO360</div>
+                <h2 class="section-title">¿Te Reconoces en Este Perfil?</h2>
+                <p class="section-subtitle">
+                    CFO360 está diseñado específicamente para dueños y directores de empresas que están en un punto crítico de su crecimiento
+                </p>
+            </div>
+            <div class="niche-description">
+                <h3>Este servicio es ideal para vos si:</h3>
+                <p>
+                    Sos dueño o director de una <strong>empresa B2B con al menos 5 años de trayectoria</strong>, que factura entre <strong>USD 85.000 y USD 850.000 mensuales</strong>. Puede ser industria, importación, tecnología, medicina, consultoría, seguros, marketing o manufactura.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Tenés capacidad de decisión directa</strong> sobre finanzas, inversiones y pagos al exterior sin necesidad de múltiples aprobaciones
+                    </li>
+                    <li>
+                        <strong>Generás excedente de caja</strong> (aunque sea irregular) y sabés que necesitás un colchón de liquidez pero también querés que el dinero trabaje
+                    </li>
+                    <li>
+                        <strong>Reconocés que operar sin información financiera clara es peligroso</strong> y que más peligroso aún es manejar el negocio "a ciegas"
+                    </li>
+                    <li>
+                        <strong>Tenés información básica disponible:</strong> balances recientes, pagos al exterior 30-90 días, caja actual y gastos fijos (aunque sea aproximado)
+                    </li>
+                    <li>
+                        <strong>Entendés la relación riesgo-retorno</strong> y querés expectativas razonables, no promesas mágicas
+                    </li>
+                    <li>
+                        <strong>Valorás las reglas y sistemas</strong> por sobre la improvisación o las decisiones por "corazonada"
+                    </li>
+                    <li>
+                        <strong>Estás dispuesto a implementar una política de tesorería</strong> y respetarla, en vez de moverte por noticias o urgencias
+                    </li>
+                    <li>
+                        <strong>Querés delegar con confianza</strong> esta área crítica del negocio en manos expertas
+                    </li>
+                </ul>
+                <p style="margin-top: 30px; font-weight: 600; font-size: 18px; color: var(--primary-deep);">
+                    Si asentiste a la mayoría de estos puntos, CFO360 fue diseñado específicamente para vos.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Mary Section -->
+    <section class="about-section">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-image">
+                    <img src="mary-photo.jpg" alt="Mary Quartino - Fundadora Aura Partners" class="mary-photo">
+                    <div class="credentials-badge">
+                        <div class="credential-item">✓ Coach ICF Certificada</div>
+                        <div class="credential-item">✓ Asesora CNV</div>
+                        <div class="credential-item">✓ +15 Años Experiencia</div>
+                    </div>
+                </div>
+                <div class="about-content">
+                    <div class="section-eyebrow">Sobre la Fundadora</div>
+                    <h2 class="section-title" style="text-align: left; margin-bottom: 24px;">Mary Quartino</h2>
+                    <p class="about-subtitle">Coach & Asesora Financiera | Fundadora de Aura Partners</p>
+                    
+                    <div class="about-text">
+                        <p>
+                            Con más de <strong>15 años de experiencia</strong> ayudando a personas y empresas a ordenar sus finanzas, gestionar inversiones y tomar decisiones estratégicas con claridad.
+                        </p>
+                        <p>
+                            Creo que el dinero no son solo números: es también energía, emociones y posibilidades. Por eso combino el asesoramiento financiero con herramientas de coaching para lograr una verdadera transformación.
+                        </p>
+                        <p>
+                            <strong>Mi trayectoria incluye:</strong>
+                        </p>
+                        <ul class="about-credentials">
+                            <li><strong>Fundadora de Aura Partners</strong> – Plataforma que integra asesoramiento financiero, servicios de gestión y programas de educación financiera</li>
+                            <li><strong>16 años de asesoramiento financiero</strong> – Servicio para personas y empresas (CFO externo)</li>
+                            <li><strong>7 años en Banca Corporativa</strong> – Asesora del Directorio en Banco Ciudad & Provincia de Buenos Aires</li>
+                            <li><strong>Coach Ontológica Certificada</strong> – International Coaching Federation (ICF)</li>
+                            <li><strong>Asesora Idónea CNV</strong> – Comisión Nacional de Valores</li>
+                            <li><strong>Master en Finanzas Corporativas</strong> – Universidad de San Andrés</li>
+                        </ul>
+                        <p style="margin-top: 24px; font-size: 17px; font-weight: 600; color: var(--primary-deep);">
+                            Mi propósito es claro: que cada persona y organización viva el dinero con tranquilidad, confianza y libertad de elección.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="problem-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-eyebrow">Los Dolores Reales</div>
+                <h2 class="section-title">¿Te Identificas con Estas Situaciones?</h2>
+                <p class="section-subtitle">
+                    Empresas exitosas que operan sin claridad financiera enfrentan estos desafíos día a día
+                </p>
+            </div>
+            <div class="problems-grid">
+                <div class="problem-card">
+                    <div class="problem-icon">🎯</div>
+                    <h3>Ceguera Financiera</h3>
+                    <p>No podés responder con certeza "¿estoy ganando plata o no?". No sabés en qué áreas ganás más ni qué deberías hacer para crecer o defenderte de una recesión.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">💰</div>
+                    <h3>Dinero Quieto o Mal Invertido</h3>
+                    <p>Acumulás caja en plazo fijo o dólares bajo el colchón. Sabés que hay instrumentos mejores pero no sabés cómo usarlos ni a quién confiarle esta decisión.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">⚡</div>
+                    <h3>Incertidumbre de Caja Constante</h3>
+                    <p>No sabés cuándo entra o sale dinero, cuánto sobra realmente, ni cuándo podés hacer inversiones importantes sin poner en riesgo la operación.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">🔥</div>
+                    <h3>Modo "Apaga Incendios"</h3>
+                    <p>Tomás decisiones financieras desde el estrés y la urgencia. Todo parece importante y urgente, pero no hay un plan claro de acción.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">👤</div>
+                    <h3>Sin Responsable del Área</h3>
+                    <p>No tenés CFO y sabés que la pata financiera es clave, pero nadie en el equipo puede darle el seguimiento que necesita. Contratar uno full-time es muy caro.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">🌊</div>
+                    <h3>Volatilidad sin Estrategia</h3>
+                    <p>Operás en un contexto de alta incertidumbre económica y sentís que cualquier decisión puede salir cara si no tenés información y plan de acción.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">😰</div>
+                    <h3>Carga Mental del Dueño</h3>
+                    <p>Cargás solo con todas las decisiones financieras, vivís con ruido mental constante y no tenés a quién delegar con confianza esta área crítica.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">📊</div>
+                    <h3>Información Dispersa e Inútil</h3>
+                    <p>Invertiste en sistemas de gestión caros pero nadie los usa, o los datos están pero no se traducen en decisiones claras y accionables.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Section -->
+    <section class="solution-section">
+        <div class="container">
+            <div class="solution-content">
+                <div class="section-header">
+                    <h2 class="section-title" style="color: white;">La Solución: CFO360</h2>
+                    <p class="section-subtitle" style="color: rgba(255,255,255,0.9);">
+                        Estrategia financiera completa sin contratar un CFO full-time
+                    </p>
+                </div>
+                <div class="solution-grid">
+                    <div class="solution-visual">
+                        <h3>El Método CFO360:</h3>
+                        <ul class="solution-list">
+                            <li class="solution-item">
+                                <span class="solution-check">✓</span>
+                                <div class="solution-item-content">
+                                    <h4>Diagnóstico en 7 días</h4>
+                                    <p>Detectamos puntos ciegos y medimos tu salud financiera real.</p>
+                                </div>
+                            </li>
+                            <li class="solution-item">
+                                <span class="solution-check">✓</span>
+                                <div class="solution-item-content">
+                                    <h4>Estrategia a medida</h4>
+                                    <p>Plan claro de tesorería e inversión sin planillas complejas.</p>
+                                </div>
+                            </li>
+                            <li class="solution-item">
+                                <span class="solution-check">✓</span>
+                                <div class="solution-item-content">
+                                    <h4>Ejecución completa</h4>
+                                    <p>Nosotros operamos: inversiones, pagos, decisiones clave.</p>
+                                </div>
+                            </li>
+                            <li class="solution-item">
+                                <span class="solution-check">✓</span>
+                                <div class="solution-item-content">
+                                    <h4>Informe + Reunión mensual</h4>
+                                    <p>Contexto, rendimiento y propuestas concretas cada mes.</p>
+                                </div>
+                            </li>
+                            <li class="solution-item">
+                                <span class="solution-check">✓</span>
+                                <div class="solution-item-content">
+                                    <h4>CFO Pocket 24/7</h4>
+                                    <p>Soporte directo por WhatsApp para decisiones urgentes.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="solution-visual">
+                        <h3>Lo que obtienes:</h3>
+                        <ul class="solution-list">
+                            <li class="solution-item">
+                                <span class="solution-check">✓</span>
+                                <div class="solution-item-content">
+                                    <h4>Claridad Total</h4>
+                                    <p>Sabes qué está pasando con tu dinero y qué hacer en cada momento.</p>
+                                </div>
+                            </li>
+                            <li class="solution-item">
+                                <span class="solution-check">✓</span>
+                                <div class="solution-item-content">
+                                    <h4>Capital Trabajando</h4>
+                                    <p>Tu dinero protegido y generando retorno con estrategia.</p>
+                                </div>
+                            </li>
+                            <li class="solution-item">
+                                <span class="solution-check">✓</span>
+                                <div class="solution-item-content">
+                                    <h4>Decisiones Informadas</h4>
+                                    <p>Menos estrés, más confianza. Datos reales, no intuición.</p>
+                                </div>
+                            </li>
+                            <li class="solution-item">
+                                <span class="solution-check">✓</span>
+                                <div class="solution-item-content">
+                                    <h4>Tranquilidad</h4>
+                                    <p>Alguien con expertise cuida este aspecto crítico de tu empresa.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Method Section -->
+    <section class="method-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="method-badge">Método CFO In & Out™</span>
+                <h2 class="section-title">Cómo Funciona</h2>
+                <p class="section-subtitle">
+                    Un proceso probado que transforma la forma en que gestionas las finanzas de tu empresa
+                </p>
+            </div>
+            <div class="process-timeline">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Diagnóstico + Estrategia (Primera Semana)</h3>
+                        <p>Analizamos tus balances, detectamos puntos ciegos y diseñamos tu plan personalizado: cuánto dejar líquido, cuánto invertir, con qué riesgo. Incluye reunión 1:1 con devolución completa.</p>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Implementación + Seguimiento Mensual</h3>
+                        <p>Ejecutamos la estrategia (inversiones, pagos al exterior, decisiones clave). Recibís informe mensual con coyuntura, resultados y propuestas de acción. Reunión 1:1 para ajustar y decidir con calma.</p>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Soporte Continuo "CFO Pocket"</h3>
+                        <p>Acceso directo por WhatsApp para validar decisiones o actuar ante imprevistos. Respuesta en menos de 24 horas hábiles. Nunca más tomar decisiones financieras solo o desde el miedo.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Deliverables Section -->
+    <section class="deliverables-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-eyebrow">Todo Incluido</div>
+                <h2 class="section-title">Qué Incluye CFO360</h2>
+                <p class="section-subtitle">
+                    Todo lo que necesitas para tomar el control financiero de tu empresa
+                </p>
+            </div>
+            <div class="deliverables-grid">
+                <div class="deliverable-card">
+                    <div class="deliverable-icon">📊</div>
+                    <h4>Diagnóstico + Estrategia Inicial</h4>
+                    <p>Análisis financiero completo, plan personalizado de tesorería e inversión con reglas claras. PDF + reunión 1:1 de devolución.</p>
+                </div>
+                <div class="deliverable-card">
+                    <div class="deliverable-icon">⚙️</div>
+                    <h4>Ejecución y Seguimiento</h4>
+                    <p>Operamos inversiones, pagos al exterior y decisiones clave. Validación, confirmaciones y reportes sin que tengas que supervisar cada paso.</p>
+                </div>
+                <div class="deliverable-card">
+                    <div class="deliverable-icon">📈</div>
+                    <h4>Informe Mensual Ejecutivo</h4>
+                    <p>Coyuntura resumida, rendimiento del mes, recomendaciones de acción. En 15 minutos sabes qué está pasando y qué hacer.</p>
+                </div>
+                <div class="deliverable-card">
+                    <div class="deliverable-icon">🤝</div>
+                    <h4>Reunión Estratégica Mensual</h4>
+                    <p>45 minutos por Zoom para revisar KPIs, ajustar estrategia y tomar decisiones clave con calma y contexto.</p>
+                </div>
+                <div class="deliverable-card">
+                    <div class="deliverable-icon">💬</div>
+                    <h4>CFO Pocket: Canal Directo 24/7</h4>
+                    <p>Soporte por WhatsApp para consultas financieras y urgencias. Respuesta en menos de 24 horas hábiles.</p>
+                </div>
+                <div class="deliverable-card">
+                    <div class="deliverable-icon">🎁</div>
+                    <h4>3 Bonos Exclusivos</h4>
+                    <p>Guía de decisiones inteligentes + Semáforo estratégico de caja + Acceso anticipado al Dashboard CFO360.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-eyebrow" style="color: var(--accent-gold);">Testimonios</div>
+                <h2 class="section-title" style="color: white;">Nos Avala Nuestra Comunidad</h2>
+                <p class="section-subtitle" style="color: rgba(255,255,255,0.9);">
+                    Dueños de empresas que transformaron su relación con las finanzas
+                </p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">
+                        <img src="https://via.placeholder.com/100/2d3e8f/ffffff?text=JS" alt="Juan Salas" style="width: 100%; height: 100%; border-radius: 50%;">
+                    </div>
+                    <div class="testimonial-name">Juan Salas</div>
+                    <div class="testimonial-role">Director Comercial, Importadora</div>
+                    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-text">
+                        "Pasé de tener el dinero 'durmiendo' en plazos fijos a una estrategia clara de inversión. Mary me explicó todo en lenguaje simple y ahora tomo decisiones con confianza, no con miedo."
+                    </p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">
+                        <img src="https://via.placeholder.com/100/7b68ee/ffffff?text=AM" alt="Andrea Martínez" style="width: 100%; height: 100%; border-radius: 50%;">
+                    </div>
+                    <div class="testimonial-name">Andrea Martínez</div>
+                    <div class="testimonial-role">CEO, Empresa Tecnológica</div>
+                    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-text">
+                        "Por fin sé si mi negocio está ganando plata o no. El informe mensual es oro puro: en 15 minutos tengo toda la información que necesito para decidir. Vale cada centavo."
+                    </p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">
+                        <img src="https://via.placeholder.com/100/d4af37/1a1a4e?text=RC" alt="Roberto Castro" style="width: 100%; height: 100%; border-radius: 50%;">
+                    </div>
+                    <div class="testimonial-name">Roberto Castro</div>
+                    <div class="testimonial-role">Socio Fundador, Consultoría</div>
+                    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-text">
+                        "Contraté CFO360 hace 6 meses y ya recuperé la inversión en optimización de tesorería. Pero lo mejor es la tranquilidad: sé que alguien con expertise está monitoreando esta área crítica."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Guarantee Section -->
+    <section class="guarantee-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-eyebrow">Garantía de Satisfacción</div>
+                <h2 class="section-title">100% Garantizada</h2>
+            </div>
+            <div class="guarantee-box">
+                <div class="guarantee-badge">🛡️</div>
+                <h3>Garantía de Claridad</h3>
+                <p>
+                    Si después del primer mes de trabajo aplicás el plan que diseñamos juntos y no sentís que ganaste <strong>claridad radical</strong> para tomar decisiones, te devolvemos ese primer pago.
+                </p>
+                <div class="guarantee-highlight">
+                    <p style="font-size: 17px; margin: 0;">
+                        <strong>No garantizamos rendimientos</strong> (nadie honesto puede hacerlo), pero sí garantizamos un cambio radical en cómo decidís sobre las finanzas de tu empresa.
+                    </p>
+                </div>
+                <p style="margin-top: 32px; font-size: 17px;">
+                    Queremos que inviertas con total tranquilidad: probá los contenidos, aplicá las herramientas y escuchá los análisis. Confiamos tanto en el valor de este servicio que asumimos todo el riesgo por vos.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-eyebrow">Inversión</div>
+                <h2 class="section-title">Una Fracción del Costo de un CFO</h2>
+                <p class="section-subtitle">
+                    Con el mismo nivel de expertise estratégico y sin contratos a largo plazo
+                </p>
+            </div>
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <div class="pricing-amount">
+                        <span class="pricing-currency">USD</span> 990
+                    </div>
+                    <div class="pricing-period">por mes</div>
+                </div>
+                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 32px; font-size: 16px;">
+                    Compromiso mínimo 3 meses para completar onboarding y ver resultados
+                </p>
+                <ul class="pricing-features">
+                    <li>Diagnóstico inicial completo</li>
+                    <li>Estrategia personalizada de tesorería e inversión</li>
+                    <li>Implementación y seguimiento mensual</li>
+                    <li>Informe mensual ejecutivo con contexto</li>
+                    <li>Reunión estratégica 1:1 mensual</li>
+                    <li>Soporte directo por WhatsApp 24/7</li>
+                    <li>3 bonos exclusivos de alto valor</li>
+                    <li>Garantía de claridad 100%</li>
+                </ul>
+                <p class="pricing-note">
+                    Opción de pago trimestral con beneficio disponible. Consultar por plan Premium con soporte prioritario.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-eyebrow">Preguntas Frecuentes</div>
+                <h2 class="section-title">¿Tenés Dudas?</h2>
+                <p class="section-subtitle">
+                    Respondemos las preguntas más comunes sobre CFO360
+                </p>
+            </div>
+            <div class="faq-container">
+                <div class="faq-category">
+                    <h3 class="faq-category-title">Sobre CFO360</h3>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            ¿Qué diferencia hay entre CFO360 y contratar un CFO?
+                            <span class="faq-icon">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                Un CFO full-time cuesta entre USD 5.000 y USD 15.000 mensuales, más beneficios y cargas sociales. CFO360 te da acceso a expertise de nivel CFO por una fracción del costo, sin compromisos laborales, con entrega mensual estructurada y soporte 24/7. Es la solución perfecta para empresas que necesitan estrategia financiera profesional sin el costo de una contratación permanente.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            ¿Necesito tener experiencia en finanzas para usar este servicio?
+                            <span class="faq-icon">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                No. De hecho, CFO360 está diseñado específicamente para dueños de empresas que NO son expertos en finanzas. Hablamos en lenguaje simple, sin jerga técnica, y explicamos cada decisión con claridad. Lo único que necesitas es estar dispuesto a compartir información básica de tu negocio y tomar acción sobre las recomendaciones.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            ¿Cuánto tiempo me tomará implementar esto?
+                            <span class="faq-icon">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                La primera semana hacemos el diagnóstico (necesitamos 1-2 horas de tu tiempo para reunión y compartir información). Después, solo necesitas 45 minutos mensuales para la reunión estratégica. El resto lo hacemos nosotros: análisis, informes, ejecución y seguimiento. Es diseñado para dueños ocupados que no tienen tiempo de convertirse en expertos financieros.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-category">
+                    <h3 class="faq-category-title">Sobre Inversión y Garantías</h3>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            ¿Hay garantía de devolución?
+                            <span class="faq-icon">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                Sí. Si después del primer mes sentís que no ganaste claridad para tomar decisiones, te devolvemos el 100% del primer pago. No hacemos preguntas complicadas. Queremos clientes satisfechos que ven el valor, no personas atrapadas en un servicio que no les sirve.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            ¿Puedo cancelar en cualquier momento?
+                            <span class="faq-icon">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                El compromiso inicial es de 3 meses (necesarios para hacer el onboarding completo y ver resultados). Después de eso, podés cancelar con 30 días de anticipación. No hay contratos anuales ni permanencias forzadas.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            ¿Qué pasa si tengo una urgencia financiera?
+                            <span class="faq-icon">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                Tenés acceso directo por WhatsApp 24/7 (CFO Pocket). Respondemos en menos de 24 horas hábiles, y en casos urgentes podemos coordinar una llamada express. Nunca más vas a tener que tomar decisiones financieras importantes solo o desde el miedo.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-category">
+                    <h3 class="faq-category-title">Otras Preguntas</h3>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            ¿Trabajan con empresas de todos los rubros?
+                            <span class="faq-icon">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                Trabajamos principalmente con empresas B2B: industria, importación, tecnología, medicina, consultoría, seguros, marketing, manufactura. Si tu empresa factura entre USD 85.000 y USD 850.000 mensuales y tenés capacidad de generar excedentes para invertir, probablemente sea un buen fit. En la llamada estratégica evaluamos si tiene sentido trabajar juntos.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            ¿Puedo acceder desde cualquier país?
+                            <span class="faq-icon">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                Sí, trabajamos principalmente con empresas de Argentina y Latinoamérica, pero el servicio es 100% remoto y podemos trabajar con empresas de cualquier país que opere con dólares o pesos argentinos. Las reuniones son por Zoom y la comunicación por WhatsApp y email.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Form Section -->
+    <section class="cta-section" id="agendar">
+        <div class="container">
+            <div class="cta-content">
+                <h2>¿Listo para Tomar el Control de tus Finanzas?</h2>
+                <p>Completa el formulario y agenda tu llamada estratégica gratuita de 30 minutos</p>
+                
+                <form class="form-container" id="contactForm" action="#" method="POST">
+                    <div class="form-group">
+                        <label for="nombre">Nombre y Apellido *</label>
+                        <input type="text" id="nombre" name="nombre" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="empresa">Nombre de la Empresa *</label>
+                        <input type="text" id="empresa" name="empresa" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Corporativo *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="telefono">Teléfono (con WhatsApp) *</label>
+                        <input type="tel" id="telefono" name="telefono" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="rubro">Rubro de tu Empresa *</label>
+                        <select id="rubro" name="rubro" required>
+                            <option value="">Selecciona una opción</option>
+                            <option value="tecnologia">Tecnología</option>
+                            <option value="medicina">Medicina / Salud</option>
+                            <option value="importacion">Importación / Exportación</option>
+                            <option value="consultoria">Consultoría</option>
+                            <option value="seguros">Seguros / Broker</option>
+                            <option value="marketing">Marketing / Agencia</option>
+                            <option value="industria">Industria / Manufactura</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="facturacion">Facturación Mensual Aproximada (USD) *</label>
+                        <select id="facturacion" name="facturacion" required>
+                            <option value="">Selecciona una opción</option>
+                            <option value="85-150k">USD 85,000 - 150,000</option>
+                            <option value="150-300k">USD 150,000 - 300,000</option>
+                            <option value="300-500k">USD 300,000 - 500,000</option>
+                            <option value="500k+">Más de USD 500,000</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="desafio">¿Cuál es tu mayor desafío financiero actual? *</label>
+                        <textarea id="desafio" name="desafio" required placeholder="Ejemplo: No sé si estoy ganando dinero realmente, tengo caja pero no sé cómo invertirla..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="form-submit">Agenda tu Llamada Estratégica →</button>
+                    
+                    <p class="form-note">
+                        Al enviar este formulario, recibirás un email con el link para agendar tu llamada. Nos pondremos en contacto en menos de 24 horas hábiles.
+                    </p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    AURA <span>PARTNERS</span>
+                </div>
+                <p>Transformando la forma en que las empresas se relacionan con el dinero</p>
+                <p style="margin-top: 24px; font-size: 14px;">© 2026 Aura Partners. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offset = 80;
+                    const targetPosition = target.offsetTop - offset;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const faqItem = this.parentElement;
+                const wasActive = faqItem.classList.contains('active');
+                
+                // Close all FAQs
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Open clicked FAQ if it wasn't active
+                if (!wasActive) {
+                    faqItem.classList.add('active');
+                }
+            });
+        });
+
+        // Form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            console.log('Form submitted:', data);
+            
+            // Here you would integrate with your CRM/Calendar system
+            // Example: Calendly, Cal.com, HubSpot, etc.
+            
+            alert('¡Gracias! Recibirás un email con el link para agendar tu llamada en los próximos minutos.');
+            this.reset();
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.problem-card, .deliverable-card, .process-step, .testimonial-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
