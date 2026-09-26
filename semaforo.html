@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semáforo Estratégico de Caja — Aura Partners</title>
+<meta name="description" content="Convierta su saldo bancario en una decisión clara: pagar, frenar o invertir. Herramienta gratuita de Aura Partners.">
+<!--
+  ============================================================================
+  SEMÁFORO ESTRATÉGICO DE CAJA — Lead magnet B2B · Aura Partners
+  Archivo único, sin dependencias (solo tipografías de Google Fonts como respaldo).
+
+  CÓMO EMBEBERLO EN LA LANDING
+  1) Subir este archivo al hosting de la web (ej: /semaforo/index.html).
+  2) Pegar en la landing, donde va la herramienta:
+
+     <iframe id="aura-semaforo" src="/semaforo/index.html"
+             style="width:100%;border:0;min-height:760px" title="Semáforo Estratégico de Caja"></iframe>
+     <script>
+       window.addEventListener('message', function (e) {
+         if (e.data && e.data.type === 'aura-semaforo-height') {
+           document.getElementById('aura-semaforo').style.height = e.data.height + 'px';
+         }
+         // Eventos para Meta Pixel / Google Analytics: e.data.type === 'aura-semaforo-event'
+         // e.data.name: 'start' | 'reveal' | 'quiz_done' | 'lead' | 'cta_click'
+       });
+     </script>
+
+  PARÁMETROS DE URL (se pueden combinar: ?theme=light&embed=1)
+     ?theme=light   versión clara (fondo claro, para landings claras)
+     ?embed=1       oculta la barra superior con la marca (cuando la landing ya la tiene)
+     ?debug=1       muestra los puntajes internos (Fit, Trigger, Prioridad, Segmento)
+     ?utm_source=…  se guarda junto con el lead si hay planilla conectada
+
+  LEADS EN GOHIGHLEVEL
+  1) En GHL: Automation → Workflows → nuevo workflow → Trigger "Inbound Webhook".
+     Copiar la URL que genera y pegarla en CONFIG.GHL_WEBHOOK_URL (más abajo).
+  2) Completar el Semáforo una vez de prueba → en el trigger, "Fetch sample requests"
+     → elegir la prueba → guardar.
+  3) Acción "Create/Update Contact": mapear first_name, last_name, email, phone,
+     company_name. El resto (semaforo, segmento, solidez, etc.) a campos personalizados.
+  4) Acción "Add Tag" con {{inboundWebhookRequest.tags}} o tags fijos por segmento
+     (If/Else sobre "segmento": A, B, C, D).
+  Si la URL queda vacía, no se envía nada y el lead llega solo por WhatsApp.
+  ============================================================================
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@1,400;1,500&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Marca Aura Partners ---------- */
+  :root{
+    --midnight:#253458; --eclipse:#22203A; --black:#0F0913; --violet:#605782;
+    --soft:#9D9AA1; --stone:#B1AA9F; --sand:#D9CBB9;
+    --green:#5BAA7E; --yellow:#E0B04F; --red:#D0654F;
+
+    /* Tipografías: si la web tiene licencia web de NICKO / Apple Garamond, se usan solas */
+    --f-display:'Nicko','NICKO','Montserrat','Arial Black',sans-serif;
+    --f-accent:'Apple Garamond','EB Garamond',Garamond,Georgia,serif;
+    --f-body:Optima,'Optima Nova','Candara','Segoe UI',system-ui,sans-serif;
+
+    /* Tema oscuro (por defecto) */
+    --bg:#22203A; --bg-2:#1B1930; --panel:#2B2948; --panel-2:#253458;
+    --line:rgba(217,203,185,.16); --line-strong:rgba(217,203,185,.38);
+    --text:#F6F2EC; --muted:#C2BECB; --faint:#8F8A9C;
+    --accent:#D9CBB9; --accent-ink:#22203A; --accent-hover:#E8DDCF;
+    --eyebrow:#D9CBB9; --em:#D9CBB9; --input:#1F1D36;
+    --lamp-off:rgba(255,255,255,.07); --housing:#15142A;
+  }
+  :root[data-theme="light"]{
+    --bg:#F7F4EF; --bg-2:#EFEAE2; --panel:#FFFFFF; --panel-2:#F3EEE6;
+    --line:rgba(37,52,88,.14); --line-strong:rgba(37,52,88,.32);
+    --text:#0F0913; --muted:#4F4B5A; --faint:#7C7886;
+    --accent:#253458; --accent-ink:#FFFFFF; --accent-hover:#1C2846;
+    --eyebrow:#605782; --em:#605782; --input:#FFFFFF;
+    --green:#3E8C61; --yellow:#C8931F; --red:#B84A36;
+    --lamp-off:rgba(255,255,255,.14); --housing:#253458;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg); color:var(--text); font-family:var(--f-body); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased}
+  button,input,select{font:inherit; color:inherit}
+  .wrap{max-width:760px; margin:0 auto; padding:0 20px}
+
+  header.brandbar{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:18px 20px; border-bottom:1px solid var(--line)}
+  .wordmark{font-family:var(--f-display); font-weight:800; letter-spacing:4px; font-size:13px; color:var(--accent)}
+  :root[data-theme="light"] .wordmark{color:var(--midnight)}
+  .brandbar .tag{font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--faint)}
+  body.embed header.brandbar{display:none}
+
+  .screen{display:none; padding:44px 0 64px; animation:fade .35s ease}
+  .screen.active{display:block}
+  @keyframes fade{from{opacity:0; transform:translateY(6px)}to{opacity:1; transform:none}}
+
+  .eyebrow{font-size:11.5px; letter-spacing:2.5px; text-transform:uppercase; color:var(--eyebrow); font-weight:700; margin-bottom:14px}
+  h1,h2,h3{font-family:var(--f-display); font-weight:800; text-transform:uppercase; letter-spacing:.3px; margin:0}
+  h1{font-size:clamp(28px,5.4vw,40px); line-height:1.08; margin-bottom:18px}
+  h2{font-size:clamp(21px,3.6vw,26px); line-height:1.15; margin-bottom:12px}
+  h3{font-size:15px; letter-spacing:1px; margin-bottom:8px}
+  em.g, .g{font-family:var(--f-accent); font-style:italic; font-weight:400; text-transform:none; color:var(--em); letter-spacing:0}
+  h1 em.g{font-size:1.08em}
+  .lead{font-size:17px; color:var(--muted); max-width:560px; margin:0 0 28px}
+  .small{font-size:13px; color:var(--faint)}
+  .center{text-align:center}
+
+  .btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; background:var(--accent); color:var(--accent-ink);
+       font-weight:700; font-size:14px; letter-spacing:.8px; text-transform:uppercase; padding:16px 28px; border:0; border-radius:3px;
+       cursor:pointer; text-decoration:none; transition:background .15s, transform .15s}
+  .btn:hover{background:var(--accent-hover)}
+  .btn:active{transform:translateY(1px)}
+  .btn:disabled{opacity:.4; cursor:not-allowed}
+  .btn.ghost{background:transparent; color:var(--text); border:1px solid var(--line-strong)}
+  .btn.ghost:hover{border-color:var(--accent); background:transparent}
+  .btn.block{width:100%}
+  .linkbtn{background:none; border:0; padding:0; color:var(--eyebrow); text-decoration:underline; text-underline-offset:3px; cursor:pointer; font-size:13.5px}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:3px}
+
+  /* ---------- Semáforo (lámparas) ---------- */
+  .light{display:inline-flex; gap:12px; background:var(--housing); padding:12px 16px; border-radius:999px; border:1px solid var(--line)}
+  .lamp{width:22px; height:22px; border-radius:50%; background:var(--lamp-off); transition:all .4s}
+  .light.big{gap:18px; padding:16px 22px}
+  .light.big .lamp{width:56px; height:56px}
+  .lamp.on.rojo{background:var(--red); box-shadow:0 0 28px var(--red)}
+  .lamp.on.amarillo{background:var(--yellow); box-shadow:0 0 28px var(--yellow)}
+  .lamp.on.verde{background:var(--green); box-shadow:0 0 28px var(--green)}
+
+  /* ---------- Intro ---------- */
+  .steps{display:grid; gap:10px; margin:0 0 28px; padding:0; list-style:none}
+  .steps li{display:flex; gap:14px; align-items:flex-start; background:var(--panel); border:1px solid var(--line); padding:14px 16px; border-radius:4px}
+  .steps .n{font-family:var(--f-display); font-weight:800; color:var(--eyebrow); font-size:18px; min-width:18px; line-height:1.4}
+  .legend{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:0 0 30px}
+  .legend div{border:1px solid var(--line); border-radius:4px; padding:12px; background:var(--panel)}
+  .legend b{display:flex; align-items:center; gap:8px; font-size:13px; text-transform:uppercase; letter-spacing:1px}
+  .legend span{font-size:13.5px; color:var(--muted)}
+  .dot{width:10px; height:10px; border-radius:50%; display:inline-block}
+  .dot.verde{background:var(--green)} .dot.amarillo{background:var(--yellow)} .dot.rojo{background:var(--red)}
+  .note{border-left:3px solid var(--sand); padding:4px 0 4px 14px; color:var(--muted); font-size:14px; margin:0 0 28px}
+  .stats{display:flex; gap:1px; background:var(--line); border:1px solid var(--line); margin-top:36px}
+  .stat{flex:1; background:var(--bg-2); padding:14px 6px; text-align:center}
+  .stat .n{font-family:var(--f-display); font-weight:800; font-size:18px; color:var(--eyebrow)}
+  .stat .l{font-size:10.5px; color:var(--faint); text-transform:uppercase; letter-spacing:.8px}
+
+  /* ---------- Formularios ---------- */
+  .seg{display:inline-flex; border:1px solid var(--line-strong); border-radius:3px; overflow:hidden; margin-bottom:22px}
+  .seg button{background:transparent; border:0; padding:8px 16px; cursor:pointer; font-size:13px; letter-spacing:.5px; color:var(--muted)}
+  .seg button.on{background:var(--accent); color:var(--accent-ink); font-weight:700}
+  .field{margin-bottom:18px}
+  .field label{display:flex; align-items:baseline; gap:8px; font-weight:700; font-size:14.5px; margin-bottom:4px}
+  .field label .k{font-family:var(--f-display); font-weight:800; font-size:12px; color:var(--eyebrow); letter-spacing:1px}
+  .field .help{font-size:13px; color:var(--faint); margin:0 0 8px}
+  .inp{position:relative}
+  .inp .sym{position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--faint); font-size:15px; pointer-events:none}
+  input[type=text],input[type=email],input[type=tel],select{width:100%; background:var(--input); border:1px solid var(--line-strong); border-radius:4px; padding:13px 14px; font-size:16px; outline:none}
+  .inp input{padding-left:46px; font-variant-numeric:tabular-nums}
+  input:focus,select:focus{border-color:var(--accent)}
+  input.err,select.err{border-color:var(--red)}
+  .errmsg{color:var(--red); font-size:13px; min-height:18px; margin-top:4px}
+  .helper{display:none; background:var(--panel); border:1px dashed var(--line-strong); border-radius:4px; padding:14px; margin-top:10px}
+  .helper.open{display:block}
+  .helper .row{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:8px}
+  .helper .row .inp{flex:1; min-width:180px}
+  .months{display:inline-flex; gap:6px}
+  .months button{border:1px solid var(--line-strong); background:transparent; border-radius:3px; padding:9px 12px; cursor:pointer; font-size:13px}
+  .months button.on{border-color:var(--accent); background:var(--accent); color:var(--accent-ink); font-weight:700}
+  .formula{display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; background:var(--panel-2); border:1px solid var(--line); border-radius:4px; padding:16px 18px; margin:6px 0 26px; font-variant-numeric:tabular-nums}
+  .formula .lbl{font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--faint); width:100%}
+  .formula .val{font-family:var(--f-display); font-weight:800; font-size:clamp(20px,4vw,26px)}
+  .formula .op{color:var(--faint)}
+  .check{display:flex; gap:10px; align-items:flex-start; font-size:13.5px; color:var(--muted); margin:6px 0 18px}
+  .check input{margin-top:4px; width:16px; height:16px; accent-color:var(--midnight)}
+
+  /* ---------- Reveal ---------- */
+  .reveal-box{background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:34px 22px; text-align:center; margin-bottom:26px}
+  .reveal-box .state{font-family:var(--f-display); font-weight:800; text-transform:uppercase; font-size:clamp(26px,5vw,34px); margin:22px 0 4px}
+  .reveal-box .action{font-family:var(--f-accent); font-style:italic; font-size:22px; color:var(--em)}
+  .reveal-box .num{margin-top:16px; color:var(--muted); font-size:15px}
+  .reveal-box .num b{color:var(--text); font-variant-numeric:tabular-nums}
+  .c-verde{color:var(--green)} .c-amarillo{color:var(--yellow)} .c-rojo{color:var(--red)}
+  .teaser{border:1px solid var(--line); border-radius:4px; padding:18px 20px; margin-bottom:24px}
+  .teaser ul{margin:8px 0 0; padding-left:18px; color:var(--muted)}
+  .teaser li{margin:4px 0}
+
+  /* ---------- Quiz ---------- */
+  .qtop{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:12px}
+  #btn-back{white-space:nowrap}
+  .qcount{font-size:11.5px; color:var(--eyebrow); letter-spacing:1.5px; text-transform:uppercase; font-weight:700}
+  .progress{height:4px; background:var(--line); border-radius:2px; overflow:hidden; margin-bottom:34px}
+  .progress i{display:block; height:100%; background:var(--accent); width:0; transition:width .3s}
+  .qtext{font-family:var(--f-accent); font-style:italic; font-size:clamp(22px,4vw,27px); line-height:1.3; margin:0 0 26px; max-width:620px}
+  .opts{display:flex; flex-direction:column; gap:10px}
+  .opt{text-align:left; background:var(--panel); border:1px solid var(--line); padding:15px 18px; border-radius:4px; cursor:pointer; font-size:15px; transition:border-color .15s, background .15s; display:flex; gap:12px; align-items:center}
+  @media (hover:hover){ .opt:hover{border-color:var(--accent)} }
+  .opt.sel{border-color:var(--accent); background:var(--panel-2)}
+  .opt .r{width:16px; height:16px; border-radius:50%; border:1.5px solid var(--line-strong); flex:none}
+  .opt.sel .r{border:5px solid var(--accent)}
+
+  /* ---------- Resultado ---------- */
+  .res-hero{display:grid; grid-template-columns:auto 1fr; gap:26px; align-items:center; background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:28px; margin-bottom:18px}
+  .res-hero .light{flex-direction:column; border-radius:40px; padding:14px 12px}
+  .res-hero .light .lamp{width:38px; height:38px}
+  .res-hero .today{font-size:12px; letter-spacing:1.8px; text-transform:uppercase; font-weight:700; margin-bottom:6px}
+  .res-hero h2{margin-bottom:10px}
+  .res-hero p{margin:0; color:var(--muted)}
+  .nums{display:grid; grid-template-columns:repeat(5,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:4px; overflow:hidden; margin-bottom:18px}
+  .nums > div{background:var(--bg-2); padding:12px 10px}
+  .nums .l{font-size:10.5px; letter-spacing:1px; text-transform:uppercase; color:var(--faint); line-height:1.3}
+  .nums .v{font-weight:700; font-variant-numeric:tabular-nums; font-size:clamp(13px,1.7vw,15px); margin-top:4px; white-space:nowrap}
+  .nums .hl{background:var(--panel-2)}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:24px; margin-bottom:18px}
+  .card.acc{border-left:3px solid var(--sand)}
+  :root[data-theme="light"] .card.acc{border-left-color:var(--midnight)}
+  .card .tag{font-size:11px; letter-spacing:1.8px; text-transform:uppercase; color:var(--eyebrow); font-weight:700; margin-bottom:8px}
+  .card p{color:var(--muted); margin:0 0 12px}
+  .card p:last-child{margin-bottom:0}
+  .rule{display:flex; flex-direction:column; gap:10px; margin:14px 0 0; padding:0; list-style:none; counter-reset:r}
+  .rule li{display:flex; gap:12px; color:var(--text); font-size:15px}
+  .rule li::before{counter-increment:r; content:counter(r); font-family:var(--f-display); font-weight:800; font-size:12px; min-width:24px; height:24px; border-radius:50%; background:var(--panel-2); border:1px solid var(--line-strong); display:flex; align-items:center; justify-content:center; flex:none; margin-top:1px}
+  .keyfig{display:flex; justify-content:space-between; align-items:baseline; gap:10px; flex-wrap:wrap; border-top:1px solid var(--line); margin-top:18px; padding-top:14px}
+  .keyfig .l{font-size:12px; letter-spacing:1.4px; text-transform:uppercase; color:var(--faint)}
+  .keyfig .v{font-family:var(--f-display); font-weight:800; font-size:24px; font-variant-numeric:tabular-nums}
+  .warn{border:1px solid var(--yellow); background:rgba(224,176,79,.08); border-radius:4px; padding:12px 16px; font-size:14px; color:var(--text); margin-bottom:18px}
+  .isc{display:flex; align-items:baseline; gap:10px; margin:2px 0 4px}
+  .isc .big{font-family:var(--f-display); font-weight:800; font-size:44px; line-height:1}
+  .isc .of{color:var(--faint)}
+  .bars{margin-top:18px}
+  .bar{margin-bottom:14px}
+  .bar .top{display:flex; justify-content:space-between; font-size:14px; margin-bottom:5px}
+  .bar .top span:last-child{color:var(--muted); font-variant-numeric:tabular-nums}
+  .track{height:8px; background:var(--line); border-radius:4px; overflow:hidden}
+  .fill{height:100%; border-radius:4px; width:0; transition:width .9s ease}
+  .quote{font-family:var(--f-accent); font-style:italic; font-size:21px; line-height:1.35; color:var(--text); margin:4px 0 12px}
+  .cta{background:var(--panel-2); border:1px solid var(--line-strong); border-radius:6px; padding:28px; margin:26px 0 18px}
+  .cta h2{margin-bottom:10px}
+  .cta p{color:var(--muted); margin:0 0 20px}
+  .cta .actions{display:flex; gap:10px; flex-wrap:wrap}
+  .tools{display:flex; gap:18px; flex-wrap:wrap; justify-content:center; margin-top:8px}
+  footer.disc{max-width:760px; margin:0 auto; padding:18px 20px 30px; font-size:11.5px; color:var(--faint); text-align:center; border-top:1px solid var(--line)}
+
+  .fit{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:0 0 26px}
+  .fit div{border:1px solid var(--line); border-radius:4px; padding:14px 16px; background:var(--panel)}
+  .fit b{display:block; font-size:11.5px; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:6px}
+  .fit .yes b{color:var(--green)} .fit .no b{color:var(--faint)}
+  .fit ul{margin:0; padding-left:16px; color:var(--muted); font-size:14px}
+  .fit li{margin:3px 0}
+  blockquote.voice{margin:0 0 28px; padding:18px 20px; border-left:3px solid var(--sand); background:var(--panel)}
+  blockquote.voice p{font-family:var(--f-accent); font-style:italic; font-size:21px; line-height:1.35; margin:0 0 8px}
+  blockquote.voice cite{font-style:normal; font-size:12.5px; color:var(--faint); letter-spacing:.5px}
+  .micro{font-size:13px; color:var(--faint); margin-top:10px}
+  .author{display:flex; gap:14px; align-items:center; margin-top:26px; padding-top:20px; border-top:1px solid var(--line)}
+  .author .mono{width:44px; height:44px; border-radius:50%; border:1px solid var(--line-strong); display:flex; align-items:center; justify-content:center; font-family:var(--f-display); font-weight:800; color:var(--eyebrow); flex:none}
+  .author p{margin:0; font-size:13.5px; color:var(--muted); line-height:1.45}
+  .author b{color:var(--text)}
+  .preview{position:relative; border:1px solid var(--line); border-radius:6px; padding:18px 20px; margin:0 0 24px; background:var(--panel)}
+  .preview .row{display:flex; justify-content:space-between; gap:12px; padding:8px 0; border-bottom:1px solid var(--line); font-size:14px}
+  .preview .row:last-child{border-bottom:0}
+  .preview .row span:first-child{color:var(--muted)}
+  .blur{filter:blur(6px); user-select:none; font-weight:700}
+  .preview .lock{font-size:11.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--eyebrow); font-weight:700; margin-bottom:6px}
+  .session{margin:0 0 22px; padding:0; list-style:none; display:grid; gap:8px}
+  .session li{display:flex; gap:10px; color:var(--text); font-size:14.5px}
+  .session li::before{content:'✓'; color:var(--green); font-weight:700}
+  .cases{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:0 0 18px}
+  .cases div{border:1px solid var(--line); border-radius:4px; padding:14px; background:var(--panel)}
+  .cases b{display:block; font-size:13px; margin-bottom:4px}
+  .cases span{font-size:13px; color:var(--muted); line-height:1.4; display:block}
+  .cases .res{color:var(--eyebrow); margin-top:6px}
+  #debug{display:none; font-family:ui-monospace,Menlo,monospace; font-size:12px; background:#000; color:#9f9; padding:14px; border-radius:4px; margin-top:18px; white-space:pre-wrap}
+
+  @media (max-width:620px){
+    .screen{padding:32px 0 48px}
+    .fit,.cases{grid-template-columns:1fr}
+    blockquote.voice p{font-size:19px}
+    .legend{gap:6px}
+    .legend div{padding:10px 8px}
+    .legend b{font-size:11.5px; gap:6px}
+    .legend span{font-size:12.5px}
+    .res-hero{grid-template-columns:1fr; text-align:center; padding:24px 18px}
+    .res-hero .light{flex-direction:row; margin:0 auto}
+    .nums{grid-template-columns:1fr 1fr}
+    .nums > div:last-child{grid-column:span 2}
+    .brandbar .tag{display:none}
+    .stat .n{font-size:15px}
+    .card,.cta{padding:20px}
+    .light.big .lamp{width:44px; height:44px}
+  }
+
+  /* ---------- Impresión / PDF del resultado ---------- */
+  @media print{
+    :root{--bg:#fff; --bg-2:#F3EEE6; --panel:#fff; --panel-2:#F3EEE6; --text:#0F0913; --muted:#3c3946; --faint:#6b6775; --line:rgba(37,52,88,.2); --line-strong:rgba(37,52,88,.35); --eyebrow:#605782; --em:#605782; --housing:#253458; --lamp-off:rgba(255,255,255,.15)}
+    *{-webkit-print-color-adjust:exact; print-color-adjust:exact; box-shadow:none!important; animation:none!important}
+    header.brandbar{display:flex!important} .wordmark{color:#253458!important}
+    .screen{display:none!important} #screen-result{display:block!important; padding-top:16px}
+    .no-print{display:none!important}
+    .card,.res-hero,.cta,.nums{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<header class="brandbar">
+  <div class="wordmark">AURA PARTNERS</div>
+  <div class="tag">Semáforo Estratégico de Caja</div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ 0. INTRO ============ -->
+  <section class="screen active" id="screen-intro" aria-labelledby="t-intro">
+    <div class="eyebrow">Para dueños de empresas en marcha · Gratis · 5 minutos</div>
+    <h1 id="t-intro">Su saldo bancario no es una decisión. <em class="g">Este semáforo sí.</em></h1>
+    <p class="lead">Con 3 números le mostramos si hoy su empresa puede <b>pagar e invertir</b>, tiene que <b>priorizar</b> o debe <b>pagar solo lo crítico</b>. Y con 12 preguntas, si ese color es una regla confiable o una foto que puede engañarlo.</p>
+
+    <div style="margin:0 0 30px"><button class="btn js-start">Calcular mi semáforo gratis →</button>
+    <div class="micro">Ve su color antes de dejar ningún dato. Puede usar valores aproximados.</div></div>
+
+    <blockquote class="voice"><p>“Me di cuenta de que necesitaba ayuda cuando vi que tenía más de $200 millones en el banco y no sabía qué hacer.”</p><cite>— Dueño de empresa, cliente de Aura Partners</cite></blockquote>
+
+    <ol class="steps">
+      <li><span class="n">1</span><span>Calcule su <b>Caja Disponible Real</b>: saldo − compromisos a 30 días − colchón.</span></li>
+      <li><span class="n">2</span><span>Defina su <b>Umbral Amarillo</b> y obtenga su semáforo: Verde, Amarillo o Rojo.</span></li>
+      <li><span class="n">3</span><span>Reciba la <b>regla de pagos e inversión</b> que corresponde a hoy, con montos, y el diagnóstico de su sistema de caja.</span></li>
+    </ol>
+
+    <div class="legend">
+      <div><b><i class="dot verde"></i>Verde</b><span>Pague e invierta</span></div>
+      <div><b><i class="dot amarillo"></i>Amarillo</b><span>Priorice</span></div>
+      <div><b><i class="dot rojo"></i>Rojo</b><span>Solo críticos</span></div>
+    </div>
+
+    <div class="fit">
+      <div class="yes"><b>Es para usted si</b><ul>
+        <li>Su empresa creció y ya mueve dinero en serio.</li>
+        <li>Las decisiones de caja, deuda o inversión terminan en usted.</li>
+        <li>Tiene contador y administración, pero nadie mira el cuadro completo.</li></ul></div>
+      <div class="no"><b>No es para usted si</b><ul>
+        <li>Su emprendimiento recién empieza.</li>
+        <li>Ya tiene un CFO que define la estrategia financiera.</li></ul></div>
+    </div>
+
+    <button class="btn js-start" id="btn-start">Empezar ahora →</button>
+
+    <div class="stats">
+      <div class="stat"><div class="n">3</div><div class="l">Números</div></div>
+      <div class="stat"><div class="n">12</div><div class="l">Preguntas</div></div>
+      <div class="stat"><div class="n">5 min</div><div class="l">Duración</div></div>
+      <div class="stat"><div class="n">100%</div><div class="l">Gratis</div></div>
+    </div>
+
+    <div class="author">
+      <div class="mono">MQ</div>
+      <p>Creado por <b>Mary Quartino</b>, economista especializada en finanzas corporativas y fundadora de Aura Partners. Máster en Finanzas Corporativas (UdeSA) y más de 15 años asesorando empresas y a sus dueños.</p>
+    </div>
+  </section>
+
+  <!-- ============ 1. NÚMEROS ============ -->
+  <section class="screen" id="screen-numbers" aria-labelledby="t-num">
+    <div class="eyebrow">Paso 1 de 3 · Sus números de hoy</div>
+    <h2 id="t-num">Tres números y un umbral</h2>
+    <p class="lead" style="margin-bottom:18px">Use valores aproximados y la unidad que le resulte cómoda (por ejemplo, en millones). Lo que importa es la proporción entre ellos. Su color aparece al instante, sin registrarse.</p>
+
+    <div class="seg" role="group" aria-label="Moneda">
+      <button type="button" data-cur="ARS" class="on">Pesos ($)</button>
+      <button type="button" data-cur="USD">Dólares (US$)</button>
+    </div>
+
+    <div class="field">
+      <label for="in-S"><span class="k">S</span> Saldo disponible hoy</label>
+      <p class="help">Cuentas bancarias y colocaciones que puede usar en 48 hs. No incluya cheques sin acreditar ni plazos fijos largos.</p>
+      <div class="inp"><span class="sym">$</span><input type="text" inputmode="decimal" id="in-S" autocomplete="off" placeholder="0"></div>
+      <div class="errmsg" id="err-S"></div>
+    </div>
+
+    <div class="field">
+      <label for="in-C30"><span class="k">C30</span> Compromisos de los próximos 30 días</label>
+      <p class="help">Lo que sí o sí sale: sueldos y cargas, impuestos, proveedores, alquileres, cuotas de deuda.</p>
+      <div class="inp"><span class="sym">$</span><input type="text" inputmode="decimal" id="in-C30" autocomplete="off" placeholder="0"></div>
+      <div class="errmsg" id="err-C30"></div>
+    </div>
+
+    <div class="field">
+      <label for="in-COL"><span class="k">COLCHÓN</span> Reserva mínima de caja</label>
+      <p class="help">El piso que la empresa nunca debería tocar. <button type="button" class="linkbtn" id="btn-helper">¿No lo tiene definido? Calcúlelo acá</button></p>
+      <div class="inp"><span class="sym">$</span><input type="text" inputmode="decimal" id="in-COL" autocomplete="off" placeholder="0"></div>
+      <div class="helper" id="helper">
+        <div class="small">Regla práctica: entre 1 y 3 meses de costos fijos (sueldos, alquiler, servicios, cuotas).</div>
+        <div class="row">
+          <div class="inp"><span class="sym">$</span><input type="text" inputmode="decimal" id="in-CF" autocomplete="off" placeholder="Costos fijos mensuales" aria-label="Costos fijos mensuales"></div>
+          <div class="months" role="group" aria-label="Meses de colchón">
+            <button type="button" data-m="1">1 mes</button><button type="button" data-m="2" class="on">2 meses</button><button type="button" data-m="3">3 meses</button>
+          </div>
+        </div>
+        <div class="row"><span class="small" id="helper-out">Colchón sugerido: —</span><button type="button" class="btn ghost" style="padding:9px 14px; font-size:12px" id="btn-usecol">Usar este valor</button></div>
+      </div>
+      <div class="errmsg" id="err-COL"></div>
+    </div>
+
+    <div class="formula" aria-live="polite">
+      <span class="lbl">Caja Disponible Real = S − C30 − Colchón</span>
+      <span class="val" id="f-cdr">—</span>
+    </div>
+
+    <div class="field">
+      <label for="in-U"><span class="k">UMBRAL</span> Su Umbral Amarillo</label>
+      <p class="help">Cuánta Caja Disponible Real quiere ver antes de invertir o adelantar pagos. Lo completamos con el 20% de sus compromisos del mes (cubre desvíos habituales de cobranza); ajústelo si quiere.</p>
+      <div class="inp"><span class="sym">$</span><input type="text" inputmode="decimal" id="in-U" autocomplete="off" placeholder="0"></div>
+      <div class="errmsg" id="err-U"></div>
+    </div>
+
+    <div style="display:flex; gap:10px; flex-wrap:wrap">
+      <button class="btn" id="btn-calc">Ver mi semáforo de hoy →</button>
+    </div>
+  </section>
+
+  <!-- ============ 2. REVEAL ============ -->
+  <section class="screen" id="screen-reveal" aria-labelledby="t-rev">
+    <div class="eyebrow center">Paso 2 de 3 · Su semáforo de hoy</div>
+    <div class="reveal-box">
+      <div class="light big" aria-hidden="true"><i class="lamp rojo"></i><i class="lamp amarillo"></i><i class="lamp verde"></i></div>
+      <div class="state" id="rv-state">—</div>
+      <div class="action" id="rv-action">—</div>
+      <div class="num" id="rv-num"></div>
+    </div>
+    <h2 id="t-rev">Esto es la foto. <em class="g">Falta saber si es confiable.</em></h2>
+    <p class="lead">Dos empresas con el mismo saldo pueden estar en situaciones opuestas: una tiene proyección, reglas y destino para cada peso; la otra decide mirando el banco. En 12 preguntas rápidas vemos cuál es su caso.</p>
+    <div class="teaser">
+      <b>Al terminar recibe:</b>
+      <ul>
+        <li>Su regla de pagos e inversión para hoy, con montos.</li>
+        <li>La solidez de su sistema de caja (0–100) en 6 frentes.</li>
+        <li>Su punto más urgente y el próximo paso concreto.</li>
+      </ul>
+    </div>
+    <button class="btn" id="btn-toquiz">Continuar · 3 minutos →</button>
+  </section>
+
+  <!-- ============ 3. PREGUNTAS ============ -->
+  <section class="screen" id="screen-quiz" aria-live="polite">
+    <div class="qtop">
+      <div class="qcount" id="q-count">Pregunta 1 de 11</div>
+      <button class="linkbtn" id="btn-back" type="button">← Volver</button>
+    </div>
+    <div class="progress"><i id="q-prog"></i></div>
+    <p class="qtext" id="q-text"></p>
+    <div class="opts" id="q-opts" role="radiogroup"></div>
+  </section>
+
+  <!-- ============ 4. CAPTURA ============ -->
+  <section class="screen" id="screen-capture" aria-labelledby="t-cap">
+    <div class="eyebrow">Paso 3 de 3 · Último paso</div>
+    <h2 id="t-cap">Su Semáforo Estratégico está listo</h2>
+    <p class="lead" style="margin-bottom:18px">Lo ve en esta misma pantalla apenas complete sus datos.</p>
+    <div class="preview" aria-hidden="true">
+      <div class="lock">Su resultado incluye</div>
+      <div class="row"><span>Lectura estratégica</span><span class="blur">Amarillo con puntos</span></div>
+      <div class="row"><span>Monto clave de hoy</span><span class="blur">$ 00.000.000</span></div>
+      <div class="row"><span>Solidez del sistema de caja</span><span class="blur">00 / 100</span></div>
+      <div class="row"><span>Su punto más urgente</span><span class="blur">Previsibilidad</span></div>
+    </div>
+    <form id="lead-form" novalidate>
+      <div class="field"><label for="f-name">Nombre y apellido</label><input type="text" id="f-name" autocomplete="name"><div class="errmsg" id="err-name"></div></div>
+      <div class="field"><label for="f-company">Empresa</label><input type="text" id="f-company" autocomplete="organization"><div class="errmsg" id="err-company"></div></div>
+      <div class="field"><label for="f-email">Email</label><input type="email" id="f-email" autocomplete="email" placeholder="nombre@empresa.com"><div class="errmsg" id="err-email"></div></div>
+      <div class="field"><label for="f-phone">WhatsApp</label><input type="tel" id="f-phone" autocomplete="tel" placeholder="+54 9 11 2345-6789"><div class="errmsg" id="err-phone"></div></div>
+      <label class="check"><input type="checkbox" id="f-ok" checked> <span>Acepto que Aura Partners me contacte para conversar sobre mi resultado. Sus datos y números son confidenciales y no se comparten con terceros.</span></label>
+      <button class="btn block" type="submit">Ver mi resultado completo →</button>
+    </form>
+  </section>
+
+  <!-- ============ 5. RESULTADO ============ -->
+  <section class="screen" id="screen-result">
+    <div class="eyebrow" id="r-eyebrow">Semáforo Estratégico de Caja</div>
+
+    <div class="res-hero">
+      <div class="light" aria-hidden="true"><i class="lamp rojo"></i><i class="lamp amarillo"></i><i class="lamp verde"></i></div>
+      <div>
+        <div class="today" id="r-today">—</div>
+        <h2 id="r-title">—</h2>
+        <p id="r-sub">—</p>
+      </div>
+    </div>
+
+    <div class="nums" id="r-nums"></div>
+    <div class="warn" id="r-warn" style="display:none"></div>
+
+    <div class="card acc">
+      <div class="tag">Su regla para hoy</div>
+      <h3 id="r-rule-title">—</h3>
+      <ol class="rule" id="r-rule"></ol>
+      <div class="keyfig"><span class="l" id="r-key-l">—</span><span class="v" id="r-key-v">—</span></div>
+    </div>
+
+    <div class="card">
+      <div class="tag">Solidez de su sistema de caja</div>
+      <div class="isc"><span class="big" id="r-isc">—</span><span class="of">/ 100</span></div>
+      <p id="r-isc-txt"></p>
+      <div class="bars" id="r-bars"></div>
+    </div>
+
+    <div class="card acc">
+      <div class="tag" id="r-reco-tag">Su punto más urgente</div>
+      <h3 id="r-reco-title">—</h3>
+      <p id="r-reco-text"></p>
+    </div>
+
+    <div class="card" id="r-trigger" style="display:none">
+      <div class="tag">La decisión que tiene sobre la mesa</div>
+      <p class="quote" id="r-trig-q"></p>
+      <p id="r-trig-t"></p>
+    </div>
+
+    <div class="cta">
+      <div class="tag" style="font-size:11px; letter-spacing:1.8px; text-transform:uppercase; color:var(--eyebrow); font-weight:700; margin-bottom:8px" id="r-cta-tag">Próximo paso</div>
+      <h2 id="r-cta-title">—</h2>
+      <p id="r-cta-text"></p>
+      <ul class="session" id="r-session"></ul>
+      <div class="actions no-print">
+        <a class="btn" id="r-cta-main" href="#" target="_blank" rel="noopener">—</a>
+        <a class="btn ghost" id="r-cta-alt" href="#" target="_blank" rel="noopener" style="display:none">—</a>
+      </div>
+      <div id="r-cases-wrap" style="margin-top:26px"><div class="small" style="letter-spacing:1.5px; text-transform:uppercase; margin-bottom:10px">Empresas como la suya que ya lo resolvieron</div><div class="cases" id="r-cases" style="margin:0"></div></div>
+    </div>
+
+    <div class="tools no-print">
+      <button class="linkbtn" id="btn-print" type="button">Guardar mi resultado en PDF</button>
+      <button class="linkbtn" id="btn-recalc" type="button">Probar con otros números</button>
+    </div>
+    <div id="debug" class="no-print"></div>
+  </section>
+</main>
+
+<footer class="disc">Aura Partners © <span id="yr"></span> — Herramienta orientativa. No constituye asesoramiento financiero ni recomendación de inversión personalizada.</footer>
+
+<script>
+(function(){
+'use strict';
+
+/* =========================================================================
+   CONFIG — todo lo calibrable está acá. No hace falta tocar la lógica.
+   ========================================================================= */
+const CONFIG = {
+  WHATSAPP: '5491167168658',          // número sin + ni espacios
+  GHL_WEBHOOK_URL: '',                // URL del trigger Inbound Webhook de GoHighLevel. Vacío = no envía.
+  GHL_TAG_BASE: 'lm-semaforo-caja',   // tag común a todos los leads de esta herramienta
+  UMBRAL_SUGERIDO_PCT: 0.20,          // Umbral Amarillo sugerido = 20% de C30
+  COLCHON_MESES_DEFAULT: 2,
+
+  // Solidez del sistema de caja (ISC): peso de cada frente
+  ISC_WEIGHTS: { prev:0.30, exc:0.14, deu:0.14, res:0.14, exp:0.14, div:0.14 },
+  ISC_BANDS:   { solido:70, medio:40 },   // ≥70 sólido · 40–69 intermedio · <40 frágil
+  TIEBREAK:    ['prev','deu','res','exc','exp','div'],  // desempate del frente más débil
+
+  // ICP Fit (0–100) = (facturación + estructura) × factor de rol
+  FIT_FACT: { f1:0, f2:10, f3:50, f4:40, f5:20 },     // <300k · 300k–1M · 1–5M · 5–15M · >15M
+  FIT_ESTR: { full:50, partial:38, cfo:5, startup:0 },
+  ROLE_FACTOR: { dueno:1, familia:1, gerente:0.9, admin:0.8, otro:0.7 },
+
+  // Trigger (0–100): gana el valor más alto (no se suman)
+  TRIGGER_DEC:   { exp:100, deu:100, exc:80, div:80, res:80, none:20 },
+  TRIGGER_COLOR: { rojo:90, amarillo:60, verde:20 },
+
+  PRIORITY_W: { fit:0.40, brecha:0.40, trigger:0.20 },
+  GATE_FIT_MIN: 40,     // debajo: segmento D (no ICP)
+  FIT_HIGH: 60,
+  PRIORITY_A: 65
+};
+
+/* =========================================================================
+   CONTENIDO
+   ========================================================================= */
+const FRENTES = {
+  prev: { name:'Previsibilidad de caja', reco:['Caja proyectada a 90 días',
+    'Un semáforo sin proyección mira para atrás. Lo que cambia la calidad de las decisiones es ver la caja de los próximos 90 días y tener una regla de prioridades de pago definida antes de que falte, no durante.'] },
+  exc:  { name:'Excedentes', reco:['Excedentes con destino',
+    'Capital quieto sin estrategia es dinero que pierde valor. No hacer nada tiene un costo; hacer algo sin criterio, también. El paso es definir cuánto queda líquido, cuánto se compromete y con qué horizonte.'] },
+  deu:  { name:'Deuda', reco:['Plan de repago',
+    'Sin cronograma y fuente de repago, cada vencimiento se vive como una urgencia en lugar de una decisión planificada. “¿Cómo vamos a pagar esta deuda?” conviene responderlo meses antes del vencimiento.'] },
+  res:  { name:'Resiliencia', reco:['Preparación para un año peor',
+    'No saber cuánto aguanta la caja si caen las ventas es el riesgo más silencioso. La resiliencia se diseña antes de la urgencia: colchón mínimo, escenarios y un plan de acción definido.'] },
+  exp:  { name:'Expansión', reco:['Crecer sin tensionar la caja',
+    'Una buena oportunidad comercial puede ser una mala decisión financiera. Antes de comprometer capital, conviene saber cuánto se necesita, de dónde sale y qué pasa si la expansión tarda seis meses más.'] },
+  div:  { name:'Divisas', reco:['Cobertura de pagos al exterior',
+    'Un pago en moneda extranjera sin previsión puede costar mucho más que el tipo de cambio de hoy. El paso es anticipar montos y fechas, y definir cómo se cubre cada compromiso.'] }
+};
+
+const QUESTIONS = [
+  { id:'q1', sec:'Confiabilidad del semáforo', frente:'prev',
+    text:'El número de compromisos a 30 días que cargó, ¿de dónde salió?',
+    opts:[['De un flujo de fondos proyectado y actualizado',2],['Lo armé con la administración o de memoria',1],['Es una estimación gruesa: no lo tenemos calculado',0]] },
+  { id:'q2', sec:'Confiabilidad del semáforo', frente:'prev',
+    text:'¿Hasta dónde ve hoy la caja de su empresa?',
+    opts:[['Tengo proyectados los próximos 90 días o más',2],['Veo el mes en curso',1],['Miro el saldo del banco del día',0]] },
+  { id:'q3', sec:'Confiabilidad del semáforo', frente:'prev',
+    text:'Cuando no alcanza para pagar todo, ¿cómo se decide qué se paga primero?',
+    opts:[['Con una regla de prioridades definida de antemano',2],['Lo decido yo según la urgencia de cada semana',1],['Se paga lo que más presiona o reclama',0]] },
+  { id:'q4', sec:'Decisiones de capital', frente:'exc',
+    text:'Cuando sobra caja, ¿ese excedente tiene un destino definido: reserva, inversión, deuda o crecimiento?',
+    opts:[['Sí, con reglas y horizontes claros',2],['A veces; depende del momento',1],['No, queda en la cuenta hasta que se necesite',0]] },
+  { id:'q5', sec:'Decisiones de capital', frente:'deu',
+    text:'¿Tiene mapeado cuándo vence cada deuda y con qué caja se va a pagar?',
+    opts:[['Sí, con cronograma y fuente de repago',2],['Tengo una idea general',1],['No lo tengo armado',0],['No tenemos deuda financiera relevante',2]] },
+  { id:'q6', sec:'Decisiones de capital', frente:'div',
+    text:'¿Sus pagos o cobros en moneda extranjera están cubiertos ante un salto del tipo de cambio?',
+    opts:[['Sí, con una estrategia de cobertura',2],['Parcialmente',1],['No, quedamos expuestos',0],['No operamos en moneda extranjera',null]] },
+  { id:'q7', sec:'Decisiones de capital', frente:'res',
+    text:'Si las ventas cayeran 20% durante tres meses, ¿sabe cuánto aguanta la caja?',
+    opts:[['Sí, lo tengo calculado',2],['Tengo una idea aproximada',1],['No lo sé',0]] },
+  { id:'q8', sec:'Decisiones de capital', frente:'exp',
+    text:'Si mañana aparece una oportunidad de crecer (sucursal, línea nueva, cliente grande), ¿sabe cuánto capital necesita y de dónde saldría?',
+    opts:[['Sí, tengo el número y la fuente',2],['Una estimación aproximada',1],['No, lo pensaría en el momento',0]] },
+  { id:'q9', sec:'Contexto de su empresa', key:'trig',
+    text:'¿Qué decisión financiera importante tiene sobre la mesa en los próximos 6 meses?',
+    opts:[['Expandirnos: sucursal, línea nueva o nueva unidad','exp'],['Repagar o reestructurar deuda','deu'],['Decidir qué hacer con excedentes de caja','exc'],['Pagos importantes al exterior o en dólares','div'],['Prepararnos por si el año viene peor','res'],['Ninguna en particular por ahora','none']] },
+  { id:'q10', sec:'Contexto de su empresa', key:'fact',
+    text:'¿Cuál es la facturación anual aproximada de la empresa?',
+    opts:[['Menos de USD 300 mil','f1'],['Entre USD 300 mil y 1 millón','f2'],['Entre USD 1 y 5 millones','f3'],['Entre USD 5 y 15 millones','f4'],['Más de USD 15 millones','f5']] },
+  { id:'q11', sec:'Contexto de su empresa', key:'estr',
+    text:'Hoy, ¿quién define las decisiones financieras importantes?',
+    opts:[['Los dueños o socios, con el contador y la administración','full'],['Los dueños, con un responsable financiero que ejecuta pero no define estrategia','partial'],['Un gerente financiero o CFO interno con estrategia propia','cfo'],['Es un emprendimiento en etapa inicial','startup']] },
+  { id:'q12', sec:'Contexto de su empresa', key:'rol',
+    text:'Por último, ¿cuál es su rol en la empresa?',
+    opts:[['Dueño/a o socio/a','dueno'],['Miembro de la familia empresaria','familia'],['Gerente general / Director/a','gerente'],['Administración o finanzas','admin'],['Otro','otro']] }
+];
+
+// Casos reales (anonimizados) del Documento Maestro Nicho Dorado
+const CASES = [
+  ['Droguería importadora · 3ra generación', 'Excedentes sin destino y pagos al exterior expuestos.', 'Capital asignado y pagos cubiertos'],
+  ['Clínica de imágenes · 2 socios', 'Sin responsable financiero y una nueva sucursal en análisis.', 'Rentabilidad y expansión modeladas'],
+  ['Insumos médicos · 2 socios', 'Deuda sin cronograma claro de repago.', 'Cash flow y estrategia de repago']
+];
+
+const COLOR = {
+  verde:    { label:'Verde',    action:'Pague e invierta' },
+  amarillo: { label:'Amarillo', action:'Priorice' },
+  rojo:     { label:'Rojo',     action:'Solo críticos' }
+};
+
+// Lectura estratégica = color de hoy × solidez del sistema
+const STRAT = {
+  verde: {
+    solido:['Verde con sistema', 'Su caja está en verde y hay método detrás. El desafío ahora es que el excedente trabaje: cada peso con destino, horizonte y un criterio que no dependa del humor del mes.'],
+    medio: ['Verde a medias', 'Hoy le sobra caja y hay algunas herramientas, pero el verde todavía depende más del saldo que de una regla. Sin proyección completa, el excedente corre riesgo de quedar quieto o mal asignado.'],
+    fragil:['Verde frágil', 'Hoy le sobra caja, pero su verde es una foto, no una regla. Sin proyección ni destino definido, el excedente pierde valor quieto o se va en decisiones sin criterio. Rentable no es lo mismo que bien gestionada.']
+  },
+  amarillo: {
+    solido:['Amarillo bajo control', 'La caja está justa, pero usted la ve venir. Aplique la regla de prioridades, no comprometa inversiones nuevas y revise el semáforo cada semana hasta volver a verde.'],
+    medio: ['Amarillo con puntos ciegos', 'La caja está justa y parte del sistema está armado, pero algunas decisiones siguen dependiendo de la urgencia de la semana. Ahí es donde se pierde plata sin que se note: pagos mal ordenados y descubiertos caros.'],
+    fragil:['Amarillo a ciegas', 'La caja está justa y las prioridades se definen sobre la marcha. Es la zona donde más plata se pierde sin que se note: pagos mal ordenados, descubiertos caros y oportunidades que se escapan.']
+  },
+  rojo: {
+    solido:['Rojo con mapa', 'Los compromisos del mes superan su caja disponible, pero hay herramientas para gestionarlo. Ejecute la regla de críticos y cierre la brecha con un plan concreto de cobranza y financiamiento.'],
+    medio: ['Rojo con mapa incompleto', 'Los compromisos del mes superan su caja disponible. Hay herramientas, pero no alcanzan para ver cuándo se normaliza. Ejecute la regla de críticos y arme el plan de salida ahora.'],
+    fragil:['Rojo: decidir hoy, no mañana', 'Los compromisos del mes superan su caja disponible y no hay una proyección que muestre cuándo se normaliza. Cada semana sin plan encarece la salida.']
+  }
+};
+
+const TRIGGERS = {
+  exp:{ q:'“¿Podemos financiar esto sin tensionar el negocio?”', t:'Una buena oportunidad comercial puede ser una mala decisión financiera. Antes de comprometer capital, conviene modelar el impacto en la caja y qué pasa si la expansión tarda seis meses más de lo previsto.' },
+  deu:{ q:'“¿Cómo vamos a repagarla?”', t:'Esa pregunta conviene responderla con cronograma, escenarios y fuente de repago meses antes del vencimiento, no la semana anterior.' },
+  exc:{ q:'“¿Qué hacemos con toda esta plata?”', t:'No hacer nada con el dinero tiene un costo. Hacer algo sin estrategia, también. La respuesta empieza por definir qué función cumple cada peso del capital.' },
+  div:{ q:'“¿Cómo aseguramos ese pago sin quedar expuestos?”', t:'Un pago al exterior se protege con previsión de montos y fechas y una cobertura definida antes de que el tipo de cambio decida por usted.' },
+  res:{ q:'“¿Estamos preparados si el año viene peor?”', t:'La estrategia financiera se construye antes de necesitarla. Saber cuánto aguanta la caja y qué palancas activar convierte la incertidumbre en un plan.' }
+};
+
+/* =========================================================================
+   ESTADO Y UTILIDADES
+   ========================================================================= */
+const params = new URLSearchParams(location.search);
+if (params.get('theme') === 'light') document.documentElement.setAttribute('data-theme','light');
+if (params.get('embed') === '1') document.body.classList.add('embed');
+const DEBUG = params.get('debug') === '1';
+
+const state = { cur:'ARS', S:null, C30:null, COL:null, U:null, uTouched:false, cfMonths:CONFIG.COLCHON_MESES_DEFAULT,
+                answers:{}, qi:0, lead:null };
+
+const $ = id => document.getElementById(id);
+const sym = () => state.cur === 'USD' ? 'US$' : '$';
+
+function parseNum(v){
+  let s = String(v || '').trim().replace(/[^\d.,]/g,'');
+  if (!s) return null;
+  if (/^\d+\.\d{1,2}$/.test(s)) return parseFloat(s);          // 1.5 → decimal
+  s = s.replace(/\./g,'').replace(',', '.');                    // 1.500.000,5 → 1500000.5
+  const n = parseFloat(s);
+  return isFinite(n) ? n : null;
+}
+function fmtPlain(n){
+  const abs = Math.abs(n);
+  const dec = (abs < 1000 && abs % 1 !== 0) ? 1 : 0;
+  return abs.toLocaleString('es-AR', { minimumFractionDigits:0, maximumFractionDigits:dec });
+}
+function fmt(n){ return (n < 0 ? '− ' : '') + sym() + ' ' + fmtPlain(n); }
+
+function post(type, payload){
+  try { if (window.parent !== window) window.parent.postMessage(Object.assign({ type }, payload), '*'); } catch(e){}
+}
+function track(name, data){
+  post('aura-semaforo-event', { name, data: data || {} });
+  try { (window.dataLayer = window.dataLayer || []).push({ event:'aura_semaforo_' + name }); } catch(e){}
+}
+function sendHeight(){ post('aura-semaforo-height', { height: document.documentElement.scrollHeight }); }
+if ('ResizeObserver' in window) new ResizeObserver(sendHeight).observe(document.body);
+window.addEventListener('load', sendHeight);
+
+function go(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $(id).classList.add('active');
+  try { window.scrollTo({ top:0, behavior:'smooth' }); } catch(e){ window.scrollTo(0,0); }
+  post('aura-semaforo-scrolltop', {});
+  setTimeout(sendHeight, 60);
+}
+function setLamps(scope, color){
+  scope.querySelectorAll('.lamp').forEach(l => l.classList.toggle('on', l.classList.contains(color)));
+}
+
+/* =========================================================================
+   PASO 1 — NÚMEROS
+   ========================================================================= */
+const NUM_FIELDS = { S:'in-S', C30:'in-C30', COL:'in-COL', U:'in-U' };
+
+document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => {
+  state.cur = b.dataset.cur;
+  document.querySelectorAll('.seg button').forEach(x => x.classList.toggle('on', x === b));
+  document.querySelectorAll('.inp .sym').forEach(s => s.textContent = sym());
+  updateFormula(); updateHelper();
+}));
+
+function readNums(){
+  for (const k in NUM_FIELDS) state[k] = parseNum($(NUM_FIELDS[k]).value);
+}
+function updateFormula(){
+  readNums();
+  const { S, C30, COL } = state;
+  const el = $('f-cdr');
+  el.className = 'val';
+  if (S === null || C30 === null || COL === null){ el.textContent = '—'; return; }
+  const cdr = S - C30 - COL;
+  el.textContent = fmt(cdr);
+  const U = state.U === null ? 0 : state.U;
+  el.classList.add(cdr < 0 ? 'c-rojo' : (cdr < U ? 'c-amarillo' : 'c-verde'));
+}
+Object.values(NUM_FIELDS).forEach(id => {
+  const inp = $(id);
+  inp.addEventListener('input', () => {
+    inp.classList.remove('err'); $('err-' + id.slice(3)).textContent = '';
+    if (id === 'in-U') state.uTouched = inp.value.trim() !== '';
+    if (id === 'in-C30' && !state.uTouched){
+      const c = parseNum(inp.value);
+      $('in-U').value = c === null ? '' : fmtPlain(Math.round(c * CONFIG.UMBRAL_SUGERIDO_PCT * 100) / 100);
+      $('in-U').classList.remove('err'); $('err-U').textContent = '';
+    }
+    updateFormula();
+  });
+  inp.addEventListener('blur', () => { const n = parseNum(inp.value); if (n !== null) inp.value = fmtPlain(n); });
+});
+
+// Ayuda para calcular el colchón
+$('btn-helper').addEventListener('click', () => { $('helper').classList.toggle('open'); sendHeight(); });
+document.querySelectorAll('.months button').forEach(b => b.addEventListener('click', () => {
+  state.cfMonths = +b.dataset.m;
+  document.querySelectorAll('.months button').forEach(x => x.classList.toggle('on', x === b));
+  updateHelper();
+}));
+$('in-CF').addEventListener('input', updateHelper);
+function updateHelper(){
+  const cf = parseNum($('in-CF').value);
+  $('helper-out').textContent = cf === null ? 'Colchón sugerido: —' : 'Colchón sugerido: ' + fmt(cf * state.cfMonths);
+}
+$('btn-usecol').addEventListener('click', () => {
+  const cf = parseNum($('in-CF').value);
+  if (cf === null) { $('in-CF').focus(); return; }
+  $('in-COL').value = fmtPlain(cf * state.cfMonths);
+  $('in-COL').classList.remove('err'); $('err-COL').textContent = '';
+  $('helper').classList.remove('open');
+  updateFormula(); sendHeight();
+});
+
+function validateNums(){
+  readNums();
+  let ok = true, first = null;
+  const msgs = { S:'Ingrese su saldo disponible (puede ser aproximado).', C30:'Ingrese sus compromisos de los próximos 30 días.',
+                 COL:'Ingrese su colchón mínimo (puede ser 0 o calcularlo con la ayuda).', U:'Ingrese su Umbral Amarillo (puede ser 0).' };
+  for (const k in NUM_FIELDS){
+    if (state[k] === null || state[k] < 0){
+      ok = false; $(NUM_FIELDS[k]).classList.add('err'); $('err-' + k).textContent = msgs[k];
+      if (!first) first = $(NUM_FIELDS[k]);
+    }
+  }
+  if (first) first.focus();
+  return ok;
+}
+
+function semaforo(){
+  const { S, C30, COL, U } = state;
+  const cdr = S - C30 - COL;
+  const color = cdr < 0 ? 'rojo' : (cdr < U ? 'amarillo' : 'verde');
+  return { cdr, color, gapToGreen: Math.max(0, U - cdr), assignable: Math.max(0, cdr - U),
+           usesCushion: cdr < 0 && S >= C30, deficitMonth: Math.max(0, C30 - S) };
+}
+
+$('btn-calc').addEventListener('click', () => {
+  if (!validateNums()) return;
+  const sm = semaforo();
+  if (state.lead && Object.keys(state.answers).length === QUESTIONS.length){ renderResult(); go('screen-result'); return; }
+  const box = document.querySelector('#screen-reveal .reveal-box');
+  box.querySelectorAll('.lamp').forEach(l => l.classList.remove('on'));
+  setTimeout(() => setLamps(box, sm.color), 250);
+  $('rv-state').textContent = COLOR[sm.color].label;
+  $('rv-state').className = 'state c-' + sm.color;
+  $('rv-action').textContent = COLOR[sm.color].action;
+  $('rv-num').innerHTML = 'Caja Disponible Real: <b>' + fmt(sm.cdr) + '</b> · Umbral Amarillo: <b>' + fmt(state.U) + '</b>';
+  go('screen-reveal');
+  track('reveal', { color: sm.color });
+});
+
+/* =========================================================================
+   PASO 2 — PREGUNTAS
+   ========================================================================= */
+document.querySelectorAll('.js-start').forEach(b => b.addEventListener('click', () => { go('screen-numbers'); track('start'); setTimeout(() => $('in-S').focus(), 350); }));
+$('btn-toquiz').addEventListener('click', () => { state.qi = 0; renderQ(); go('screen-quiz'); });
+
+function renderQ(){
+  const q = QUESTIONS[state.qi];
+  $('q-count').textContent = 'Pregunta ' + (state.qi + 1) + ' de ' + QUESTIONS.length + ' · ' + q.sec;
+  $('q-prog').style.width = (state.qi / QUESTIONS.length * 100) + '%';
+  $('q-text').textContent = q.text;
+  const box = $('q-opts'); box.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'opt' + (state.answers[q.id] === i ? ' sel' : '');
+    b.setAttribute('role','radio'); b.setAttribute('aria-checked', state.answers[q.id] === i ? 'true' : 'false');
+    b.innerHTML = '<span class="r"></span><span></span>';
+    b.lastChild.textContent = o[0];
+    b.addEventListener('click', () => pick(i));
+    box.appendChild(b);
+  });
+  $('btn-back').textContent = state.qi === 0 ? '← Mi semáforo' : '← Volver';
+  sendHeight();
+}
+let picking = false;
+function pick(i){
+  if (picking) return; picking = true;
+  const q = QUESTIONS[state.qi];
+  state.answers[q.id] = i;
+  document.querySelectorAll('#q-opts .opt').forEach((b, j) => b.classList.toggle('sel', j === i));
+  setTimeout(() => {
+    picking = false;
+    if (state.qi < QUESTIONS.length - 1){ state.qi++; renderQ(); }
+    else { $('q-prog').style.width = '100%'; track('quiz_done');
+           if (state.lead){ renderResult(); go('screen-result'); } else { go('screen-capture'); setTimeout(() => $('f-name').focus(), 350); } }
+  }, 260);
+}
+$('btn-back').addEventListener('click', () => {
+  if (state.qi === 0) { go('screen-reveal'); return; }
+  state.qi--; renderQ();
+});
+
+/* =========================================================================
+   PASO 3 — CAPTURA
+   ========================================================================= */
+$('lead-form').addEventListener('submit', e => {
+  e.preventDefault();
+  const v = {
+    name: $('f-name').value.trim(), company: $('f-company').value.trim(),
+    email: $('f-email').value.trim(), phone: $('f-phone').value.trim()
+  };
+  const errs = {};
+  if (v.name.length < 2) errs.name = 'Ingrese su nombre.';
+  if (v.company.length < 2) errs.company = 'Ingrese el nombre de su empresa.';
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.email)) errs.email = 'Revise el email.';
+  if (v.phone.replace(/\D/g,'').length < 8) errs.phone = 'Ingrese un WhatsApp válido, con código de área.';
+  ['name','company','email','phone'].forEach(k => {
+    const el = $('f-' + k); el.classList.toggle('err', !!errs[k]); $('err-' + k).textContent = errs[k] || '';
+  });
+  const bad = Object.keys(errs);
+  if (bad.length){ $('f-' + bad[0]).focus(); return; }
+  v.contactOk = $('f-ok').checked;
+  state.lead = v;
+  const r = compute();
+  sendLead(r);
+  track('lead', { color: r.sm.color, segment: r.segment, isc: r.isc });
+  renderResult();
+  go('screen-result');
+});
+
+/* =========================================================================
+   SCORING
+   ========================================================================= */
+function ans(id){ const q = QUESTIONS.find(x => x.id === id); return q.opts[state.answers[id]]; }
+
+function compute(){
+  const sm = semaforo();
+
+  // Frentes
+  const acc = {};
+  QUESTIONS.filter(q => q.frente).forEach(q => {
+    const o = q.opts[state.answers[q.id]]; if (!o || o[1] === null) return;
+    acc[q.frente] = acc[q.frente] || { pts:0, max:0 };
+    acc[q.frente].pts += o[1]; acc[q.frente].max += 2;
+  });
+  const pct = {};
+  Object.keys(acc).forEach(k => pct[k] = Math.round(acc[k].pts / acc[k].max * 100));
+  let wsum = 0, isc = 0;
+  Object.keys(pct).forEach(k => { wsum += CONFIG.ISC_WEIGHTS[k]; isc += pct[k] * CONFIG.ISC_WEIGHTS[k]; });
+  isc = Math.round(isc / wsum);
+  const band = isc >= CONFIG.ISC_BANDS.solido ? 'solido' : (isc >= CONFIG.ISC_BANDS.medio ? 'medio' : 'fragil');
+
+  let weakest = null;
+  CONFIG.TIEBREAK.forEach(k => { if (pct[k] !== undefined && (weakest === null || pct[k] < pct[weakest])) weakest = k; });
+
+  // Calificación comercial (interna)
+  const fact = ans('q10')[1], estr = ans('q11')[1], dec = ans('q9')[1];
+  const role = ans('q12')[1];
+  const fit = Math.round((CONFIG.FIT_FACT[fact] + CONFIG.FIT_ESTR[estr]) * (CONFIG.ROLE_FACTOR[role] || 0.7));
+  const trigger = Math.max(CONFIG.TRIGGER_DEC[dec], CONFIG.TRIGGER_COLOR[sm.color]);
+  const brecha = 100 - isc;
+  const W = CONFIG.PRIORITY_W;
+  const priority = Math.round(fit * W.fit + brecha * W.brecha + trigger * W.trigger);
+
+  let segment;
+  if (fit < CONFIG.GATE_FIT_MIN) segment = 'D';
+  else if (fit >= CONFIG.FIT_HIGH && priority >= CONFIG.PRIORITY_A) segment = 'A';
+  else if (fit >= CONFIG.FIT_HIGH || priority >= CONFIG.PRIORITY_A) segment = 'B';
+  else segment = 'C';
+
+  const lowConfidence = ans('q1')[1] === 0;
+  return { sm, pct, isc, band, weakest, fact, estr, dec, role, fit, trigger, brecha, priority, segment, lowConfidence };
+}
+
+/* =========================================================================
+   RESULTADO
+   ========================================================================= */
+function barColor(p){ return p >= 70 ? 'var(--green)' : (p >= 40 ? 'var(--yellow)' : 'var(--red)'); }
+
+function renderResult(){
+  const r = compute(), sm = r.sm, L = state.lead;
+  $('r-eyebrow').textContent = 'Semáforo Estratégico de Caja · ' + L.company;
+
+  // Héroe
+  setLamps(document.querySelector('.res-hero'), sm.color);
+  $('r-today').innerHTML = 'Hoy: <span class="c-' + sm.color + '">' + COLOR[sm.color].label + ' — ' + COLOR[sm.color].action + '</span>';
+  const st = STRAT[sm.color][r.band];
+  $('r-title').textContent = st[0];
+  $('r-sub').textContent = st[1];
+
+  // Números
+  const cells = [
+    ['Saldo disponible (S)', fmt(state.S)], ['Compromisos 30 días', fmt(state.C30)], ['Colchón', fmt(state.COL)],
+    ['Caja Disponible Real', '<span class="c-' + sm.color + '">' + fmt(sm.cdr) + '</span>', true], ['Umbral Amarillo', fmt(state.U)]
+  ];
+  $('r-nums').innerHTML = cells.map(c => '<div' + (c[2] ? ' class="hl"' : '') + '><div class="l">' + c[0] + '</div><div class="v">' + c[1] + '</div></div>').join('');
+
+  // Advertencia de confiabilidad
+  const w = $('r-warn');
+  if (r.lowConfidence){
+    w.style.display = 'block';
+    w.innerHTML = '<b>Atención:</b> sus compromisos a 30 días son una estimación gruesa. Un semáforo con datos estimados puede mostrar ' +
+      (sm.color === 'verde' ? 'verde cuando en realidad es amarillo.' : 'un color que no es el real.') + ' Tómelo como orientación, no como regla.';
+  } else w.style.display = 'none';
+
+  // Regla de hoy
+  let title, items, keyL, keyV;
+  if (sm.color === 'verde'){
+    title = 'Verde: pague e invierta';
+    items = ['Pague todos los compromisos del mes en término. Si algún proveedor ofrece descuento por pago anticipado, evalúelo.',
+             'No toque el colchón ni el umbral: son su margen de seguridad.',
+             'Asigne el excedente por horizonte: lo que va a necesitar en los próximos meses, en instrumentos líquidos; el resto, a un destino definido (reserva, deuda cara, crecimiento).',
+             'Vuelva a medir el semáforo cada 15 días o ante cualquier cobro o pago grande.'];
+    keyL = 'Monto que puede asignar hoy'; keyV = fmt(sm.assignable);
+  } else if (sm.color === 'amarillo'){
+    title = 'Amarillo: priorice';
+    items = ['Pague en este orden: sueldos y cargas sociales → impuestos y servicios esenciales → proveedores críticos para operar → deuda financiera.',
+             'Lo que no entra en ese orden, negócielo con fecha. No lo deje pendiente sin fecha.',
+             'No invierta ni adelante pagos hasta volver a verde.',
+             'Revise el semáforo cada semana y active la cobranza de lo vencido.'];
+    keyL = 'Le falta para volver a verde'; keyV = fmt(sm.gapToGreen);
+  } else {
+    title = 'Rojo: solo críticos';
+    items = ['Pague solo lo que frena la operación si no se paga: sueldos, impuestos con sanción e insumos críticos.',
+             sm.usesCushion ? 'Puede cubrir el mes, pero comiéndose el colchón. Trátelo como alarma, no como solución.'
+                            : 'Los compromisos del mes superan el saldo disponible: hace falta caja nueva, no solo reordenar pagos.',
+             'Antes de tocar el colchón: acelere cobranzas, renegocie plazos con proveedores y evalúe financiamiento puente con costo conocido.',
+             'No tome deuda nueva sin un plan de repago escrito.'];
+    keyL = 'Brecha a cubrir para salir del rojo'; keyV = fmt(-sm.cdr);
+  }
+  $('r-rule-title').textContent = title;
+  $('r-rule').innerHTML = ''; items.forEach(t => { const li = document.createElement('li'); li.textContent = t; $('r-rule').appendChild(li); });
+  $('r-key-l').textContent = keyL; $('r-key-v').textContent = keyV; $('r-key-v').className = 'v c-' + sm.color;
+
+  // Solidez del sistema
+  $('r-isc').textContent = r.isc;
+  $('r-isc').style.color = barColor(r.isc);
+  $('r-isc-txt').textContent = r.band === 'solido'
+    ? 'Su empresa tiene método para decidir sobre la caja. Lo que queda es sostenerlo y afinar los frentes con menor puntaje.'
+    : r.band === 'medio'
+      ? 'Hay herramientas, pero todavía muchas decisiones dependen de la intuición y de lo que muestra el banco ese día.'
+      : 'Las decisiones de caja se toman sin proyección ni reglas. El color de hoy dice poco sobre el de dentro de un mes.';
+  const order = ['prev','exc','deu','res','exp','div'];
+  $('r-bars').innerHTML = order.map(k => {
+    const p = r.pct[k];
+    if (p === undefined) return '<div class="bar"><div class="top"><span>' + FRENTES[k].name + '</span><span>No aplica</span></div><div class="track"></div></div>';
+    return '<div class="bar"><div class="top"><span>' + FRENTES[k].name + '</span><span>' + p + '%</span></div><div class="track"><div class="fill" data-w="' + p + '" style="background:' + barColor(p) + '"></div></div></div>';
+  }).join('');
+  requestAnimationFrame(() => setTimeout(() => document.querySelectorAll('#r-bars .fill').forEach(f => f.style.width = f.dataset.w + '%'), 80));
+
+  // Punto más urgente
+  const allStrong = r.pct[r.weakest] >= 70;
+  $('r-reco-tag').textContent = allStrong ? 'Su próximo nivel' : 'Su punto más urgente';
+  $('r-reco-title').textContent = allStrong ? 'Del orden a la estrategia de capital' : FRENTES[r.weakest].reco[0];
+  $('r-reco-text').textContent = allStrong
+    ? 'Su sistema de caja está ordenado en los seis frentes. El siguiente salto ya no es de control sino de estrategia: qué rendimiento le pide a cada peso, cómo se financia el crecimiento y qué decisiones puede delegar sin perder visibilidad.'
+    : FRENTES[r.weakest].reco[1];
+
+  // Decisión sobre la mesa
+  if (r.dec !== 'none'){
+    $('r-trigger').style.display = 'block';
+    $('r-trig-q').textContent = TRIGGERS[r.dec].q;
+    $('r-trig-t').textContent = TRIGGERS[r.dec].t;
+  } else $('r-trigger').style.display = 'none';
+
+  // CTA por segmento
+  const first = L.name.split(' ')[0];
+  const resumen = 'Resultado: ' + COLOR[sm.color].label + ' (' + STRAT[sm.color][r.band][0] + '). Solidez del sistema de caja: ' +
+                  r.isc + '/100.' + (r.pct[r.weakest] < 70 ? ' Frente más débil: ' + FRENTES[r.weakest].name + '.' : '');
+  const ref = ' [Ref. SE-' + r.segment + r.priority + ']';
+  const waSesion = 'Hola María, soy ' + L.name + ' de ' + L.company + '. Hice el Semáforo Estratégico de Caja. ' + resumen + ' Quiero agendar una Sesión de Claridad.' + ref;
+  const waExcel  = 'Hola María, soy ' + L.name + ' de ' + L.company + '. Hice el Semáforo Estratégico de Caja. ' + resumen + ' Quiero recibir la plantilla Excel del Semáforo.' + ref;
+  const wa = t => 'https://wa.me/' + CONFIG.WHATSAPP + '?text=' + encodeURIComponent(t);
+
+  let tag, h, p, main, alt = null;
+  if (r.segment === 'A'){
+    tag = 'Próximo paso recomendado';
+    h = first + ', este resultado merece 30 minutos';
+    p = 'Su semáforo y la decisión que tiene por delante muestran una brecha concreta. En una Sesión de Claridad Financiera sin costo revisamos juntos su resultado, validamos qué está pasando en la caja y le decimos con honestidad si hace falta profundizar o no.';
+    main = ['Agendar mi Sesión de Claridad →', wa(waSesion)];
+    alt  = ['Prefiero recibir la plantilla Excel', wa(waExcel)];
+  } else if (r.segment === 'B'){
+    tag = 'Próximo paso';
+    h = 'Revisemos su resultado juntos';
+    p = 'Un semáforo es una foto; la estrategia está en lo que se hace con ella. En una Sesión de Claridad Financiera (30 minutos, sin costo) interpretamos su resultado y definimos el próximo paso para su empresa.';
+    main = ['Agendar mi Sesión de Claridad →', wa(waSesion)];
+    alt  = ['Recibir la plantilla Excel', wa(waExcel)];
+  } else if (r.segment === 'C'){
+    tag = 'Para seguir usando el método';
+    h = 'Llévese el Semáforo a su Excel';
+    p = 'Le enviamos por WhatsApp la plantilla interactiva del Semáforo Estratégico de Caja para que la use cada semana con sus números reales. Se la mandamos en el día.';
+    main = ['Recibir la plantilla por WhatsApp →', wa(waExcel)];
+    alt  = ['Prefiero conversar mi resultado', wa(waSesion)];
+  } else {
+    tag = 'Para seguir usando el método';
+    h = 'Llévese el Semáforo a su Excel';
+    p = 'Le enviamos por WhatsApp la plantilla del Semáforo Estratégico de Caja para que la use cada semana. Es la forma más simple de decidir pagos e inversiones con una regla, no con el saldo del día.';
+    main = ['Recibir la plantilla por WhatsApp →', wa(waExcel)];
+  }
+  $('r-cta-tag').textContent = tag; $('r-cta-title').textContent = h; $('r-cta-text').textContent = p;
+  const sesion = (r.segment === 'A' || r.segment === 'B') ? [
+    'Revisamos juntos su semáforo y lo que muestra de su caja.',
+    'Validamos si las señales son relevantes para su empresa.',
+    'Se lleva un próximo paso claro, lo contrate con nosotros o no.',
+    '30 minutos por videollamada. Sin costo ni compromiso.'
+  ] : [];
+  $('r-session').innerHTML = ''; sesion.forEach(t => { const li = document.createElement('li'); li.textContent = t; $('r-session').appendChild(li); });
+  $('r-cases-wrap').style.display = r.segment === 'D' ? 'none' : '';
+  $('r-cases').innerHTML = r.segment === 'D' ? '' : CASES.map(c => '<div><b>' + c[0] + '</b><span>' + c[1] + '</span><span class="res">→ ' + c[2] + '</span></div>').join('');
+  $('r-cta-main').textContent = main[0]; $('r-cta-main').href = main[1];
+  $('r-cta-main').onclick = () => track('cta_click', { cta:'main', segment:r.segment });
+  if (alt){ $('r-cta-alt').style.display = ''; $('r-cta-alt').textContent = alt[0]; $('r-cta-alt').href = alt[1];
+            $('r-cta-alt').onclick = () => track('cta_click', { cta:'alt', segment:r.segment }); }
+  else $('r-cta-alt').style.display = 'none';
+
+  // Debug
+  if (DEBUG){
+    $('debug').style.display = 'block';
+    $('debug').textContent = JSON.stringify({ color:sm.color, cdr:sm.cdr, isc:r.isc, band:r.band, pct:r.pct, weakest:r.weakest,
+      fit:r.fit, trigger:r.trigger, brecha:r.brecha, priority:r.priority, segment:r.segment, fact:r.fact, estr:r.estr, dec:r.dec, role:r.role }, null, 2);
+  }
+}
+
+$('btn-print').addEventListener('click', () => window.print());
+$('btn-recalc').addEventListener('click', () => { go('screen-numbers'); });
+
+/* =========================================================================
+   ENVÍO DEL LEAD (opcional, a Google Sheets)
+   ========================================================================= */
+function phoneE164(raw){
+  let d = String(raw || '').replace(/\D/g,'');
+  if (String(raw).trim().startsWith('+')) return '+' + d;
+  d = d.replace(/^00/, '');
+  if (d.startsWith('54')) return '+' + d;
+  d = d.replace(/^0/, '');                          // 011… → 11…
+  d = d.replace(/^(\d{2,4})15(\d{6,8})$/, '$1$2');  // 11 15 5555-6666 → 11 5555-6666
+  if (d.length === 10) return '+549' + d;           // celular argentino
+  return '+' + d;
+}
+function sendLead(r){
+  if (!CONFIG.GHL_WEBHOOK_URL) return;
+  const L = state.lead, a = id => ans(id)[0];
+  const parts = L.name.split(/\s+/);
+  const band = { solido:'solido', medio:'intermedio', fragil:'fragil' }[r.band];
+  const payload = {
+    first_name: parts[0], last_name: parts.slice(1).join(' '), full_name: L.name,
+    email: L.email, phone: phoneE164(L.phone), phone_raw: L.phone, company_name: L.company,
+    rol: a('q12'), acepta_contacto: L.contactOk ? 'si' : 'no', source: 'Semáforo Estratégico de Caja',
+    tags: [CONFIG.GHL_TAG_BASE, 'segmento-' + r.segment.toLowerCase(), 'semaforo-' + r.sm.color, 'solidez-' + band].join(','),
+    segmento: r.segment, prioridad: r.priority, fit: r.fit, trigger: r.trigger,
+    semaforo: r.sm.color, lectura: STRAT[r.sm.color][r.band][0], solidez: r.isc, solidez_banda: band,
+    frente_mas_debil: FRENTES[r.weakest].name, decision: a('q9'), facturacion: a('q10'), estructura: a('q11'),
+    moneda: state.cur, saldo: state.S, c30: state.C30, colchon: state.COL, umbral: state.U, caja_disponible_real: r.sm.cdr,
+    p_previsibilidad: r.pct.prev, p_excedentes: r.pct.exc, p_deuda: r.pct.deu, p_resiliencia: r.pct.res, p_expansion: r.pct.exp,
+    p_divisas: (r.pct.div === undefined ? 'n/a' : r.pct.div),
+    utm_source: params.get('utm_source') || '', utm_medium: params.get('utm_medium') || '', utm_campaign: params.get('utm_campaign') || '',
+    referrer: document.referrer || '', fecha: new Date().toISOString()
+  };
+  const body = JSON.stringify(payload);
+  // 1º intento: JSON estándar. Si el navegador lo bloquea por CORS, 2º intento sin preflight.
+  fetch(CONFIG.GHL_WEBHOOK_URL, { method:'POST', headers:{ 'Content-Type':'application/json' }, body, keepalive:true })
+    .catch(() => fetch(CONFIG.GHL_WEBHOOK_URL, { method:'POST', mode:'no-cors', headers:{ 'Content-Type':'text/plain;charset=utf-8' }, body, keepalive:true }).catch(() => {}));
+}
+
+$('yr').textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>
